@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.aorise.mapper.sitevisits.SiteVisitsMapper">
+    <resultMap id="SiteVisitsInfo" type="com.aorise.model.sitevisits.SiteVisitsInfoModel">
+       <id column="id" property="id"/>
+        <result property="address" column="addr"/>
+        <result property="county" column="county"/>
+        <result property="creater" column="creater"/>
+        <result property="disposePerson" column="dispose_person"/>
+        <result property="disposeState" column="dispose_state"/>
+        <result property="editer" column="editer"/>
+        <result property="name" column="name"/>
+        <result property="isQuestion" column="is_question"/>
+        <result property="visitsTime" column="visits_Time"/>
+        <result property="projectId" column="project_id"/>
+        <result property="state" column="state"/>
+        <result property="numbers" column="numbers"/>
+        <result property="results" column="results"/>
+        <result property="createTime" column="create_time"/>
+        <result property="editTime" column="edit_time"/>
+        <result property="visitsQuestion" column="visits_question"/>
+    </resultMap>
+    <resultMap id="SiteVisits" type="com.aorise.model.sitevisits.SiteVisitsModel">
+            <id column="id" property="id"/>
+            <result property="visitsId" column="visitsid"/>
+            <result property="disposePeople" column="dispose_people"/>
+            <result property="fulfillTime" column="fulfill_time"/>
+            <result property="fulfillRequire" column="fulfill_require"/>
+            <result property="disposeTime" column="dispose_time"/>
+            <result property="appointedResults" column="appointed_results"/>
+            <result property="state" column="state"/>
+            <result property="creater" column="creater"/>
+            <result property="createTime" column="create_time"/>
+            <result property="editer" column="editer"/>
+            <result property="editTime" column="edit_time"/>
+            <result property="disposeState" column="dispose_state"/>
+    </resultMap>
+
+    <resultMap id="SiteVisitsInfoAndImg" type="com.aorise.model.sitevisits.SiteVisitsInfoModel">
+        <id column="id" property="id"/>
+        <result property="address" column="addr"/>
+        <result property="county" column="county"/>
+        <result property="creater" column="creater"/>
+        <result property="disposePerson" column="dispose_person"/>
+        <result property="disposeState" column="dispose_state"/>
+        <result property="editer" column="editer"/>
+        <result property="name" column="name"/>
+        <result property="isQuestion" column="is_question"/>
+        <result property="visitsTime" column="visits_Time"/>
+        <result property="projectId" column="project_id"/>
+        <result property="state" column="state"/>
+        <result property="numbers" column="numbers"/>
+        <result property="results" column="results"/>
+        <result property="createTime" column="create_time"/>
+        <result property="editTime" column="edit_time"/>
+        <result property="visitsQuestion" column="visits_question"/>
+        <result property="createName" column="createName"/>
+        <collection property="imgList" ofType="com.aorise.model.imgfile.ImgFileModel">
+            <id column="iid" property="id" jdbcType="INTEGER" javaType="INTEGER"></id>
+            <result column="relation_id" property="relationId" jdbcType="INTEGER" javaType="INTEGER"></result>
+            <result column="type" property="type" jdbcType="INTEGER" javaType="INTEGER"></result>
+            <result column="url" property="url" jdbcType="VARCHAR" javaType="String"></result>
+        </collection>
+    </resultMap>
+    <resultMap id="SiteVisitsAndImg" type="com.aorise.model.sitevisits.SiteVisitsModel">
+        <id column="id" property="id"/>
+        <result property="visitsId" column="visitsid"/>
+        <result property="disposePeople" column="dispose_people"/>
+        <result property="fulfillTime" column="fulfill_time"/>
+        <result property="fulfillRequire" column="fulfill_require"/>
+        <result property="disposeTime" column="dispose_time"/>
+        <result property="appointedResults" column="appointed_results"/>
+        <result property="state" column="state"/>
+        <result property="creater" column="creater"/>
+        <result property="createTime" column="create_time"/>
+        <result property="editer" column="editer"/>
+        <result property="editTime" column="edit_time"/>
+        <result property="disposeState" column="dispose_state"/>
+        <collection property="imgList" ofType="com.aorise.model.imgfile.ImgFileModel">
+            <id column="iid" property="id" jdbcType="INTEGER" javaType="INTEGER"></id>
+            <result column="relation_id" property="relationId" jdbcType="INTEGER" javaType="INTEGER"></result>
+            <result column="type" property="type" jdbcType="INTEGER" javaType="INTEGER"></result>
+            <result column="url" property="url" jdbcType="VARCHAR" javaType="String"></result>
+        </collection>
+    </resultMap>
+    <sql id="siteVisitsInfo">
+          s.id,
+          s.project_id,
+          s.name,
+          s.visits_time,
+          s.addr,
+          s.numbers,
+          s.dispose_person,
+          s.is_question,
+          s.visits_question,
+          s.results,
+          s.dispose_state,
+          s.state,
+          s.creater,
+          s.create_time,
+          s.county,
+          s.editer,
+          s.edit_time
+    </sql>
+    <sql id="siteVisits">
+          s.id,
+          s.visitsid,s.dispose_people,
+          s.fulfill_time,s.fulfill_require,
+          s.dispose_time,s.appointed_results,
+          s.state,s.creater,s.create_time,
+          s.editer,s.edit_time,s.dispose_state
+    </sql>
+    <sql id="siteVisitsList">
+        s.id,
+        s.name,
+        s.visits_time,
+        s.addr,
+        s.numbers,
+        s.is_question,
+        s.visits_question,
+        s.dispose_state,
+        s.creater,
+        s.create_time
+    </sql>
+    <!--开工前摸排处理数据插入-->
+   <insert id="addSiteVisits" statementType="PREPARED"  useGeneratedKeys="true" keyProperty="model.id">
+        INSERT INTO
+        site_visits
+        (
+          visitsid,dispose_people,
+          fulfill_time,fulfill_require,
+          state,creater,create_time,dispose_state
+        )
+        VALUES
+        (
+          cast(#{model.visitsId} as integer),#{model.disposePeople},
+          #{model.fulfillTime},#{model.fulfillRequire},
+          #{model.state},cast(#{userId} as integer),now(),cast(#{model.disposeState} as integer)
+        )
+   </insert>
+    <!--开工前摸排详情插入-->
+    <insert id="addSiteVisitsInfo" statementType="PREPARED"  useGeneratedKeys="true" keyProperty="model.id">
+        INSERT INTO
+        site_visits_info
+        (
+          project_id,name,
+          visits_time,addr,
+          numbers,dispose_person,
+          is_question,visits_question,
+          results,dispose_state,
+          state,creater,create_time,
+          county
+        )
+        VALUES
+        (
+          #{model.projectId},#{model.name},
+          #{model.visitsTime},#{model.address},
+          #{model.numbers},#{model.disposePerson},
+          #{model.isQuestion},#{model.visitsQuestion},
+          #{model.results}, cast(#{model.disposeState} as integer),
+          #{model.state},cast(#{userId} as integer),
+          now(),#{model.county}
+        )
+    </insert>
+    <!--更新开工前摸排数据-->
+    <update id="updateSiteVisits">
+        UPDATE
+        site_visits
+        SET
+            dispose_time  = #{model.disposeTime},
+        <if test="model.appointedResults != null and model.appointedResults != ''">
+            appointed_results  = #{model.appointedResults},
+        </if>
+        <if test="model.disposeState != null and model.disposeState != ''">
+            dispose_state = cast(#{model.disposeState} as integer),
+        </if>
+        edit_time = now(),editer = cast(#{editer} as integer)
+        WHERE id = #{model.id}
+    </update>
+
+    <!--分页查询-->
+    <select id="getAllByPage" resultMap="SiteVisitsInfo" parameterType="java.util.Map" statementType="PREPARED">
+        SELECT
+        <include refid="siteVisitsList"/>,
+        (SELECT  count(1) FROM project_com_info WHERE project_id = s.project_id   and state= cast(1 as integer)and s.id = relate_id) AS commentCount,
+        (
+        COALESCE((select a.name FROM area_info a WHERE a.area_code = pr.county),'')
+        ||
+        COALESCE((select a.name FROM area_info a WHERE a.area_code = pr.township),'')
+        ||
+        COALESCE((select a.name FROM area_info a WHERE a.area_code =pr.village),'')
+        ) AS detailedAddr
+        FROM site_visits_info s
+        left join project_addr_info pr
+        ON s.project_id = pr.project_id and pr.id in (select min(t3.id) from project_addr_info t3  group by t3.project_id) and pr.state = 1
+        WHERE 1=1
+        <if test="state!=null and state!=''">
+            AND s.state= cast(#{state} as integer)
+        </if>
+        <if test="countyCode!=null and countyCode!=''">
+            AND s.project_id in(SELECT project_id FROM project_addr_info WHERE county = #{countyCode})
+        </if>
+        <if test="villageCode!=null and villageCode!=''">
+            AND pr.township = #{villageCode}
+        </if>
+        <if test="hamletCode!=null and hamletCode!=''">
+            AND pr.village = #{hamletCode}
+        </if>
+        <if test="isQuestion!=null and isQuestion!=''">
+            AND s.is_question = cast(#{isQuestion} as integer)
+        </if>
+        <if test="disposeState!=null and disposeState!=''">
+            AND s.dispose_state =cast(#{disposeState} as integer)
+        </if>
+        <if test="startTime!=null and startTime!=''">
+            AND <![CDATA[s.visits_time >= to_date(#{startTime},'yyyy-MM-dd hh24:mi:ss')]]>
+        </if>
+        <if test="endTime!=null and endTime!=''">
+            AND <![CDATA[s.visits_time <= to_date(#{endTime},'yyyy-MM-dd hh24:mi:ss')]]>
+        </if>
+        <if test="projectId != null and projectId != ''">
+            AND s.project_id = cast(#{projectId} as integer)
+        </if>
+        <if test="userId != null and userId !=''">
+            AND s.project_id in (select project_id from use_pro_info where user_id = cast(#{userId} as integer))
+        </if>
+        order by s.visits_time DESC
+        limit  #{endIndex} offset #{beginIndex}
+    </select>
+    <!--总数-->
+    <select id="getAllByPageCount" resultType="Integer" parameterType="java.util.Map" statementType="PREPARED">
+        SELECT
+        count(1)
+        FROM site_visits_info s
+        left join project_addr_info pr
+        ON s.project_id = pr.project_id and pr.id in (select min(t3.id) from project_addr_info t3  group by t3.project_id) and pr.state = 1
+        WHERE 1=1
+        <if test="state!=null and state!=''">
+            AND s.state= cast(#{state} as integer)
+        </if>
+        <if test="countyCode!=null and countyCode!=''">
+            AND s.project_id in(SELECT project_id FROM project_addr_info WHERE county = #{countyCode})
+        </if>
+        <if test="villageCode!=null and villageCode!=''">
+            AND pr.township = #{villageCode}
+        </if>
+        <if test="hamletCode!=null and hamletCode!=''">
+            AND pr.village = #{hamletCode}
+        </if>
+        <if test="isQuestion!=null and isQuestion!=''">
+            AND s.is_question = cast(#{isQuestion} as integer)
+        </if>
+        <if test="disposeState!=null and disposeState!=''">
+            AND s.dispose_state =cast(#{disposeState} as integer)
+        </if>
+        <if test="startTime!=null and startTime!=''">
+            AND <![CDATA[s.visits_time >= to_date(#{startTime},'yyyy-MM-dd hh24:mi:ss')]]>
+        </if>
+        <if test="endTime!=null and endTime!=''">
+            AND <![CDATA[s.visits_time <= to_date(#{endTime},'yyyy-MM-dd hh24:mi:ss')]]>
+        </if>
+        <if test="projectId != null and projectId != ''">
+            AND s.project_id = cast(#{projectId} as integer)
+        </if>
+        <if test="userId != null and userId !=''">
+            AND s.project_id in (select project_id from use_pro_info where user_id = cast(#{userId} as integer))
+        </if>
+    </select>
+    <!--删除开工前摸排数据-->
+    <update id="delteSiteVisitsInfo" parameterType="integer">
+          UPDATE
+          site_visits_info
+          SET
+          state = #{state},
+          editer = #{editer}
+        WHERE id IN
+        <foreach collection="id" item="id" index="no" open="("
+                 separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+    <!--根据开工前摸排id查询开工前摸排处理信息-->
+    <select id="getSiteVisitsById" resultMap="SiteVisitsAndImg" parameterType="integer">
+          SELECT <include refid="siteVisits"/>,
+            i.id as iid,
+            i.relation_id,
+            i.type,
+            i.url,
+          (SELECT full_name from sys_user where id = s.creater) as createName
+          FROM site_visits s LEFT JOIN imageinfo i ON i.relation_id = s.id  and i.type = 13
+          WHERE s.visitsid = #{visitsid}
+          ORDER BY s.create_time ASC , i.create_time ASC
+    </select>
+
+     <select id="getSiteVisitsInfo" resultMap="SiteVisitsInfoAndImg" parameterType="integer" statementType="PREPARED">
+         SELECT s.id,
+           s.project_id,
+           s.name,
+           s.visits_time,
+           s.addr,
+           s.numbers,
+           s.dispose_person,
+           s.is_question,
+           s.visits_question,
+           s.results,
+           s.dispose_state,
+           s.state,
+           s.creater,
+           s.create_time,
+           s.county,
+           s.editer,
+           s.edit_time,
+           i.id as iid,
+           i.relation_id,
+           i.type,
+           i.url,
+         (select full_name FROM sys_user where id = s.creater)AS createName
+         FROM site_visits_info s LEFT JOIN imageinfo i ON i.relation_id = s.id and (i.type = 11 or i.type = 12)
+         WHERE 1 = 1
+         AND s.state = 1
+         AND s.id = #{id}
+         ORDER BY i.create_time ASC
+     </select>
+
+     <update id="updateSiteVisitsInfo"  useGeneratedKeys="true" keyProperty="model.id">
+         UPDATE
+         site_visits_info
+         SET
+         editer = #{model.editer},
+         edit_time = now(),
+         <if test="model.disposeState != null and model.disposeState != ''">
+             dispose_state = cast(#{model.disposeState} AS INTEGER)
+         </if>
+         where id = #{model.id}
+     </update>
+ </mapper>

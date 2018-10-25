@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.aorise.mapper.system.SysUserRoleMapper">
+    <!--添加通知用户关系-->
+    <insert id="insertObject" parameterType="com.aorise.model.system.SysUserRoleModel"
+            statementType="PREPARED">
+        INSERT INTO sys_user_role(role_id,user_id) VALUES(#{roleId},#{userId})
+    </insert>
+    <!--根据用户删除关系-->
+    <delete id="deleteByUserId">
+        DELETE FROM sys_user_role WHERE user_id=#{userId}
+    </delete>
+
+</mapper>

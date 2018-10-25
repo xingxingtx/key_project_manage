@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.aorise.mapper.system.SysPermissionMapper">
+
+    <resultMap id="DetailMap" type="com.aorise.model.system.SysPermissionModel">
+        <id column="id" property="id" jdbcType="INTEGER" javaType="Integer"></id>
+        <result column="name" property="name" jdbcType="VARCHAR" javaType="String"></result>
+        <result column="url" property="url" jdbcType="VARCHAR" javaType="String"></result>
+        <result column="parent" property="parent" jdbcType="INTEGER" javaType="Integer"></result>
+        <result column="code" property="code" jdbcType="VARCHAR" javaType="String"></result>
+        <result column="describes" property="describes" jdbcType="VARCHAR" javaType="String"></result>
+        <result column="state" property="state" jdbcType="INTEGER" javaType="Integer"></result>
+    </resultMap>
+
+    <insert id="insertObject" useGeneratedKeys="true" keyProperty="id"
+            parameterType="com.aorise.model.system.SysPermissionModel">
+        insert into "public"."sys_permission"("name","parent","code","describes","creater","create_time","state")
+        values(#{name},#{parent},#{code},#{describes},#{creater},to_timestamp(#{createTime},'yyyy-mm-dd hh24:mi:ss'),#{state})
+    </insert>
+
+    <!--删除权限-->
+    <delete id="deleteObject" parameterType="com.aorise.model.system.SysPermissionModel">
+        DELETE FROM "public"."sys_permission" WHERE id=#{id}
+    </delete>
+
+    <!--修改权限-->
+    <update id="editeObject" parameterType="com.aorise.model.system.SysPermissionModel">
+        UPDATE "public"."sys_permission" set "name"=#{name},"code"=#{code},"parent"=#{parent},
+         "describes" =#{describes},"editer"=#{editer},"edit_time"=to_timestamp(#{editeTime},'yyyy-mm-dd hh24:mi:ss'),"state"=#{state} WHERE id=#{id}
+    </update>
+
+    <!--查询详情-->
+    <select id="findObject" resultMap="DetailMap" parameterType="com.aorise.model.system.SysPermissionModel">
+        SELECT "id","name","url","parent","code","describes","state" FROM "public"."sys_permission"
+        WHERE id=#{id} and  "state"=1
+    </select>
+
+    <!--查询列表-->
+    <select id="findPerList" resultMap="DetailMap" >
+        SELECT "id","name","url","parent","code","describes","state" FROM "public"."sys_permission"
+        WHERE  "state"=1
+    </select>
+
+    <!--通过角色id查询权限列表-->
+    <select id="findPerListByRoleId" resultMap="DetailMap" parameterType="Integer">
+        SELECT p."id",p."name",p."url",p."parent",p."code",p."describes",p."state" FROM "public"."sys_permission" p
+        inner join "public"."sys_role_permission" rp on p.id=rp.permission_id
+        inner join "public"."sys_role" r on rp.role_id=r.id
+        WHERE  p."state"=1 and r.id=#{roleId}
+    </select>
+
+</mapper>

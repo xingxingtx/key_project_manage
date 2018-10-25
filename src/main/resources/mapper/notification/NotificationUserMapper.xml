@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.aorise.mapper.notification.NotificationUserMapper">
+    <resultMap id="DetailMap" type="com.aorise.model.notification.NotificationModel">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="title" jdbcType="VARCHAR" property="title" />
+        <result column="type" jdbcType="INTEGER" property="type" />
+        <result column="create_time" jdbcType="VARCHAR" property="createTime" />
+        <result column="full_name" jdbcType="VARCHAR" property="fullName" />
+        <result column="is_read" jdbcType="INTEGER" property="isRead" />
+    </resultMap>
+
+    <!--添加通知用户关系-->
+    <insert id="insertObject" parameterType="com.aorise.model.notification.NotificationUserModel"
+            statementType="PREPARED" useGeneratedKeys="true" keyProperty="id">
+
+        INSERT INTO notification_user
+        (notification_id,user_id,is_read,state)
+        VALUES
+        (#{notificationId},#{userId},#{isRead},#{state})
+    </insert>
+    <!--修改状态-->
+    <update id="updateStatus" parameterType="java.util.Map"
+            statementType="PREPARED">
+        update notification_user SET is_read=#{isRead} WHERE user_id=#{userId} AND notification_id=#{notificationId}
+    </update>
+    <!--根据用户删除关系-->
+    <delete id="deleteByUserId" parameterType="com.aorise.model.notification.NotificationUserModel"
+            statementType="PREPARED">
+        update notification_user SET state=#{state} WHERE user_id=#{userId} AND notification_id=#{notificationId}
+    </delete>
+    <!--根据通知id删除-->
+    <delete id="deleteByNotificationId" parameterType="Integer" statementType="PREPARED">
+        DELETE FROM notification_user WHERE  notification_id=#{notificationId}
+    </delete>
+    <!--根据用户查询未读消息-->
+    <select id="getByOnRead" parameterType="java.util.Map" resultType="Integer" statementType="PREPARED">
+        SELECT COUNT (1) FROM notification_user WHERE user_id=#{userId} and  is_read=0 AND  state= 1
+    </select>
+    <!--分页查询-->
+    <select id="getAllByPage" resultMap="DetailMap" parameterType="java.util.Map" statementType="PREPARED">
+        SELECT u.id,u.title,su.full_name,u.type,u.create_time,nu.is_read from notification_user nu
+        LEFT JOIN notification u ON u.id=nu.notification_id
+        LEFT JOIN sys_user su on su.id=u.creater
+        WHERE nu.user_id=#{userId}
+        <if test="state!=null and state!='' and state!=0">
+            AND u.state= #{state}
+            AND nu.state= #{state}
+        </if>
+        order by u.create_time  DESC
+         limit  #{endIndex} offset #{beginIndex}
+    </select>
+    <select id="getAllByPageCount" resultType="Integer" parameterType="java.util.Map" statementType="PREPARED">
+         SELECT count(1) from notification_user nu
+        LEFT JOIN notification u ON u.id=nu.notification_id
+        LEFT JOIN sys_user su on su.id=nu.user_id
+        WHERE nu.user_id=#{userId}
+        <if test="state!=null and state!='' and state!=0">
+            AND u.state= #{state}
+            AND nu.state= #{state}
+        </if>
+    </select>
+</mapper>

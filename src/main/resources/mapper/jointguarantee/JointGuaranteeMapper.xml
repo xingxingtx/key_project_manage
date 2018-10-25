@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.aorise.mapper.jointguarantee.JointGuaranteeMapper">
+
+    <!--分页查询-->
+    <select id="getAllByPage" resultType="com.aorise.model.jointguarantee.JointGuaranteeModel" parameterType="java.util.Map" statementType="PREPARED">
+        SELECT
+         id,
+         name,
+         type,
+         createTime,
+         endTime,
+         disposeState,
+         disposeStateInfo,
+         disposepeople,
+         commentCount,
+         number,
+         isQuestion,
+         source,
+         preventReason,
+         detailedAddr
+        FROM joint_guarantee
+        WHERE 1=1
+        <if test="disposeState!=null and disposeState!=''">
+            AND disposeState =cast(#{disposeState} as integer)
+        </if>
+        <if test="userId != null and userId != ''">
+          AND <![CDATA[regexp_split_to_array(disposepeople, ',') @> cast(array[#{userId}] AS text[])]]>
+        </if>
+        order by createTime DESC
+        limit  #{endIndex} offset #{beginIndex}
+    </select>
+    <!--总数-->
+    <select id="getAllByPageCount" resultType="Integer" parameterType="java.util.Map" statementType="PREPARED">
+        SELECT count(1) FROM
+        joint_guarantee
+    </select>
+
+</mapper>

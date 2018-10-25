@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.aorise.mapper.constructionhidden.ConstructionHiddenMapper">
+    <resultMap id="ConstructionHiddenInfo" type="com.aorise.model.constructionhidden.ConstructionHiddenInfoModel">
+        <id column="id" property="id"/>
+        <result property="projectId" column="project_id"/>
+        <result property="name" column="name"/>
+        <result property="hiddenTime" column="hidden_time"/>
+        <result property="hiddenAddress" column="hidden_addr"/>
+        <result property="caseReporter" column="case_reporter"/>
+        <result property="phone" column="phone"/>
+        <result property="source" column="source"/>
+        <result property="content" column="content"/>
+        <result property="disposeResult" column="dispose_result"/>
+        <result property="disposeState" column="dispose_state"/>
+        <result property="state" column="state"/>
+        <result property="creater" column="creater"/>
+        <result property="createTime" column="create_time"/>
+        <result property="editer" column="editer"/>
+        <result property="editTime" column="edit_time"/>
+        <result property="county" column="county"/>
+    </resultMap>
+    <resultMap id="ConstructionHidden" type="com.aorise.model.constructionhidden.ConstructionHiddenModel">
+        <id column="id" property="id"/>
+        <result property="hiddenid" column="visitsid"/>
+        <result property="disposePeople" column="dispose_people"/>
+        <result property="fulfillTime" column="fulfill_time"/>
+        <result property="fulfillRequire" column="fulfill_require"/>
+        <result property="disposeTime" column="dispose_time"/>
+        <result property="appointedResults" column="appointed_results"/>
+        <result property="state" column="state"/>
+        <result property="creater" column="creater"/>
+        <result property="createTime" column="create_time"/>
+        <result property="editer" column="editer"/>
+        <result property="editTime" column="edit_time"/>
+        <result property="disposeState" column="dispose_state"/>
+    </resultMap>
+
+    <resultMap id="ConstructionHiddenInfoAndImg" type="com.aorise.model.constructionhidden.ConstructionHiddenInfoModel">
+        <id column="id" property="id"/>
+        <result property="projectId" column="project_id"/>
+        <result property="name" column="name"/>
+        <result property="hiddenTime" column="hidden_time"/>
+        <result property="hiddenAddress" column="hidden_addr"/>
+        <result property="caseReporter" column="case_reporter"/>
+        <result property="phone" column="phone"/>
+        <result property="source" column="source"/>
+        <result property="content" column="content"/>
+        <result property="disposeResult" column="dispose_result"/>
+        <result property="disposeState" column="dispose_state"/>
+        <result property="state" column="state"/>
+        <result property="creater" column="creater"/>
+        <result property="createTime" column="create_time"/>
+        <result property="editer" column="editer"/>
+        <result property="editTime" column="edit_time"/>
+        <result property="county" column="county"/>
+        <result property="createName" column="createName"/>
+        <collection property="imgList" ofType="com.aorise.model.imgfile.ImgFileModel">
+            <id column="iid" property="id" jdbcType="INTEGER" javaType="INTEGER"></id>
+            <result column="relation_id" property="relationId" jdbcType="INTEGER" javaType="INTEGER"></result>
+            <result column="type" property="type" jdbcType="INTEGER" javaType="INTEGER"></result>
+            <result column="url" property="url" jdbcType="VARCHAR" javaType="String"></result>
+        </collection>
+    </resultMap>
+    <resultMap id="ConstructionHiddenAndImg" type="com.aorise.model.constructionhidden.ConstructionHiddenModel">
+        <id column="id" property="id"/>
+        <result property="hiddenid" column="visitsid"/>
+        <result property="disposePeople" column="dispose_people"/>
+        <result property="fulfillTime" column="fulfill_time"/>
+        <result property="fulfillRequire" column="fulfill_require"/>
+        <result property="disposeTime" column="dispose_time"/>
+        <result property="appointedResults" column="appointed_results"/>
+        <result property="state" column="state"/>
+        <result property="creater" column="creater"/>
+        <result property="createTime" column="create_time"/>
+        <result property="editer" column="editer"/>
+        <result property="editTime" column="edit_time"/>
+        <result property="disposeState" column="dispose_state"/>
+        <collection property="imgList" ofType="com.aorise.model.imgfile.ImgFileModel">
+            <id column="iid" property="id" jdbcType="INTEGER" javaType="INTEGER"></id>
+            <result column="relation_id" property="relationId" jdbcType="INTEGER" javaType="INTEGER"></result>
+            <result column="type" property="type" jdbcType="INTEGER" javaType="INTEGER"></result>
+            <result column="url" property="url" jdbcType="VARCHAR" javaType="String"></result>
+        </collection>
+    </resultMap>
+    <sql id="constructionHiddenInfo">
+        co.id,
+        co.project_id,
+        co.name,
+        co.hidden_time,
+        co.hidden_addr,
+        co.case_reporter,
+        co.phone,
+        co.source,
+        co.content,
+        co.dispose_result,
+        co.dispose_state,
+        co.state,
+        co.creater,
+        co.create_time,
+        co.editer,
+        co.edit_time,
+        co.county
+    </sql>
+    <sql id="constructionHidden">
+          co.id,
+          co.hiddenid,co.dispose_people,
+          co.fulfill_time,co.fulfill_require,
+          co.dispose_time,co.appointed_results,
+          co.state,co.creater,co.create_time,
+          co.editer,co.edit_time,co.dispose_state
+    </sql>
+    <sql id="constructionHiddenList">
+        co.id,
+        co.name,
+        co.hidden_time,
+        co.dispose_state,
+        co.source,
+        co.creater,
+        co.create_time
+    </sql>
+    <!--施工过程中隐患处理数据插入-->
+    <insert id="addConstructionHidden" statementType="PREPARED"  useGeneratedKeys="true" keyProperty="model.id">
+        INSERT INTO
+        construction_hidden
+        (
+        hiddenid,dispose_people,
+        fulfill_time,fulfill_require,
+        state,creater,create_time,dispose_state
+        )
+        VALUES
+        (
+        cast(#{model.hiddenid} as integer),#{model.disposePeople},
+        #{model.fulfillTime},#{model.fulfillRequire},
+        #{model.state},cast(#{userId} as integer),now(),cast(#{model.disposeState} as integer)
+        )
+    </insert>
+    <!--施工过程中隐患详情插入-->
+    <insert id="addConstructionHiddenInfo"  useGeneratedKeys="true" keyProperty="model.id">
+        INSERT INTO
+        construction_hidden_info
+        (
+        project_id,name,
+        hidden_time,hidden_addr,
+        source,content,
+        case_reporter,dispose_result,
+        dispose_state,state,
+        creater,create_time,
+        county
+        )
+        VALUES
+        (
+        #{model.projectId},#{model.name},
+        #{model.hiddenTime},#{model.hiddenAddress},
+        #{model.source},#{model.content},
+        #{model.caseReporter},#{model.disposeResult},
+        cast(#{model.disposeState} as integer),
+        #{model.state},cast(#{userId} as integer),
+        now(),#{model.county}
+        )
+    </insert>
+    <!--更新施工过程中隐患处理数据-->
+    <update id="updateConstructionHidden">
+        UPDATE
+        construction_hidden
+        SET
+            dispose_time  = #{model.disposeTime},
+       <if test="model.appointedResults != null and model.appointedResults != ''">
+           appointed_results  = #{model.appointedResults},
+       </if>
+        <if test="model.disposeState != null and model.disposeState != ''">
+            dispose_state =  cast(#{model.disposeState} as integer),
+        </if>
+        edit_time = now(),editer = cast(#{editer} as integer)
+        WHERE id = #{model.id}
+    </update>
+
+    <!--分页查询-->
+    <select id="getAllByPage" resultMap="ConstructionHiddenInfo" parameterType="java.util.Map" statementType="PREPARED">
+        SELECT
+        <include refid="constructionHiddenList"/>,
+        (SELECT  count(1) FROM project_com_info WHERE project_id = co.project_id  and state= cast(#{state} as integer)and co.id = relate_id) AS commentCount,
+        (
+        COALESCE((select a.name FROM area_info a WHERE a.area_code = pr.county),'')
+        ||
+        COALESCE((select a.name FROM area_info a WHERE a.area_code = pr.township),'')
+        ||
+        COALESCE((select a.name FROM area_info a WHERE a.area_code =pr.village),'')
+        ) AS detailedAddr
+        FROM construction_hidden_info co
+        left join project_addr_info pr
+        ON co.project_id = pr.project_id and pr.id in (select min(t3.id) from project_addr_info t3  group by t3.project_id) and pr.state = 1
+        WHERE 1=1
+        <if test="state!=null and state!=''">
+            AND co.state= cast(#{state} as integer)
+        </if>
+        <if test="countyCode!=null and countyCode!=''">
+            AND co.project_id in(SELECT project_id FROM project_addr_info WHERE county = #{countyCode})
+        </if>
+        <if test="villageCode!=null and villageCode!=''">
+            AND pr.township = #{villageCode}
+        </if>
+        <if test="hamletCode!=null and hamletCode!=''">
+            AND pr.village = #{hamletCode}
+        </if>
+        <if test="source!=null and source!=''">
+            AND co.source = cast(#{source} as integer)
+        </if>
+        <if test="disposeState!=null and disposeState!=''">
+            AND co.dispose_state =cast(#{disposeState} as integer)
+        </if>
+        <if test="startTime!=null and startTime!=''">
+            AND <![CDATA[co.hidden_time >= to_date(#{startTime},'yyyy-MM-dd hh24:mi:ss')]]>
+        </if>
+        <if test="endTime!=null and endTime!=''">
+            AND <![CDATA[co.hidden_time <= to_date(#{endTime},'yyyy-MM-dd hh24:mi:ss')]]>
+        </if>
+        <if test="projectId != null and projectId != ''">
+            AND co.project_id = cast(#{projectId} as integer)
+        </if>
+        <if test="userId != null and userId !=''">
+            AND co.project_id in (select project_id from use_pro_info where user_id = cast(#{userId} as integer))
+        </if>
+        order by co.hidden_time DESC
+        limit  #{endIndex} offset #{beginIndex}
+    </select>
+    <!--总数-->
+    <select id="getAllByPageCount" resultType="Integer" parameterType="java.util.Map" statementType="PREPARED">
+        SELECT
+        count(1)
+        FROM construction_hidden_info co
+        left join project_addr_info pr
+        ON co.project_id = pr.project_id and pr.id in (select min(t3.id) from project_addr_info t3  group by t3.project_id) and pr.state = 1
+        WHERE 1=1
+        <if test="state!=null and state!=''">
+            AND co.state= cast(#{state} as integer)
+        </if>
+        <if test="countyCode!=null and countyCode!=''">
+            AND co.project_id in(SELECT project_id FROM project_addr_info WHERE county = #{countyCode})
+        </if>
+        <if test="villageCode!=null and villageCode!=''">
+            AND pr.township = #{villageCode}
+        </if>
+        <if test="hamletCode!=null and hamletCode!=''">
+            AND pr.village = #{hamletCode}
+        </if>
+        <if test="source!=null and source!=''">
+            AND co.source = cast(#{source} as integer)
+        </if>
+        <if test="disposeState!=null and disposeState!=''">
+            AND co.dispose_state =cast(#{disposeState} as integer)
+        </if>
+        <if test="startTime!=null and startTime!=''">
+            AND <![CDATA[co.hidden_time >= to_date(#{startTime},'yyyy-MM-dd hh24:mi:ss')]]>
+        </if>
+        <if test="endTime!=null and endTime!=''">
+            AND <![CDATA[co.hidden_time <= to_date(#{endTime},'yyyy-MM-dd hh24:mi:ss')]]>
+        </if>
+        <if test="projectId != null and projectId != ''">
+            AND co.project_id = cast(#{projectId} as integer)
+        </if>
+        <if test="userId != null and userId !=''">
+            AND co.project_id in (select project_id from use_pro_info where user_id = cast(#{userId} as integer))
+        </if>
+    </select>
+    <!--删除施工过程中隐患数据-->
+    <update id="delteConstructionHiddenInfo" parameterType="integer">
+          UPDATE
+          construction_hidden_info
+          SET
+          state = #{state},
+          editer = #{editer}
+          WHERE id IN
+        <foreach collection="id" item="id" index="no" open="("
+                            separator="," close=")">
+                 #{id}
+    </foreach>
+    </update>
+    <!--根据施工过程中隐患id查询施工过程中隐患处理信息-->
+    <select id="getConstructionHiddenById" resultMap="ConstructionHiddenAndImg" parameterType="integer">
+        SELECT <include refid="constructionHidden"/>,
+        i.id as iid,
+        i.relation_id,
+        i.type,
+        i.url,
+        (SELECT full_name from sys_user where id = co.creater) as createName
+        FROM construction_hidden co LEFT JOIN imageinfo i ON i.relation_id = co.id and i.type = 43
+        WHERE co.hiddenid = #{hiddenid}
+        ORDER BY co.create_time ASC , i.create_time ASC
+    </select>
+
+    <select id="getConstructionHiddenInfo" resultMap="ConstructionHiddenInfoAndImg" parameterType="integer" statementType="PREPARED">
+        SELECT co.id,
+        co.project_id,
+        co.name,
+        co.hidden_time,
+        co.hidden_addr,
+        co.case_reporter,
+        co.phone,
+        co.source,
+        co.content,
+        co.dispose_result,
+        co.dispose_state,
+        co.state,
+        co.creater,
+        co.create_time,
+        co.editer,
+        co.edit_time,
+        co.county,
+        i.id as iid,
+        i.relation_id,
+        i.type,
+        i.url,
+        (select full_name FROM sys_user where id = co.creater)AS createName
+        FROM construction_hidden_info co LEFT JOIN imageinfo i ON co.id = i.relation_id and (i.type = 41 or i.type = 42)
+        WHERE 1 = 1
+        AND co.state = 1
+        AND co.id = #{id}
+        ORDER BY i.create_time ASC
+    </select>
+    <update id="updateConstructionHiddenInfo"  useGeneratedKeys="true" keyProperty="model.id">
+        UPDATE
+        construction_hidden_info
+        SET
+        editer = #{model.editer},
+        edit_time = now(),
+        <if test="model.disposeState != null and model.disposeState != ''">
+            dispose_state = cast(#{model.disposeState} AS INTEGER)
+        </if>
+        where id = #{model.id}
+    </update>
+</mapper>

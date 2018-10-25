@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.aorise.mapper.systemlog.SystemLogMapper">
+
+    <resultMap id="baseMap" type="com.aorise.model.systemlog.SystemLogModel">
+        <id column="id" property="id"/>
+        <result property="ip" column="ip"/>
+        <result property="requestapi" column="requestapi"/>
+        <result property="httptype" column="httptype"/>
+        <result property="type" column="type"/>
+        <result property="actionmethod" column="actionmethod"/>
+        <result property="params" column="params"/>
+        <result property="actiondate" column="actiondate"/>
+        <result property="returndata" column="returndata"/>
+        <result property="type" column="type"/>
+        <result property="userid" column="userid"/>
+        <result property="modules" column="modules"/>
+        <result property="description" column="description"/>
+        <result property="exceptioncode" column="exceptioncode"/>
+        <result property="exceptiondetail" column="exceptiondetail"/>
+
+    </resultMap>
+    <!--添加系统日志-->
+    <insert id="saveUser" parameterType="com.aorise.model.systemlog.SystemLogModel" statementType="PREPARED" >
+        INSERT INTO systemlog
+        (ip,requestapi,httptype,actionmethod,params,actiondate,returndata,type,returndate,
+        userid,modules,description,exceptioncode,exceptiondetail)
+        VALUES
+        (#{ip},#{requestapi},#{httptype},#{actionmethod},#{params},to_timestamp(#{actiondate},'yyyy-mm-dd hh24:mi:ss'),#{returndata},
+        #{type},to_timestamp(#{returndate},'yyyy-mm-dd hh24:mi:ss'),#{userid},#{modules},#{description},#{exceptioncode},#{exceptiondetail})
+    </insert>
+
+    <!--分页查询系统日志详情-->
+    <select id="getSystemLog" resultMap="baseMap"  parameterType="java.util.Map" statementType="PREPARED">
+        SELECT id,ip,requestapi,httptype,actionmethod,params,actiondate,returndata,
+        type,returndate,userid,modules,description,exceptioncode,exceptiondetail FROM systemlog
+        where 1=1
+        order by actiondate DESC
+        limit   #{endIndex} offset #{beginIndex}
+    </select>
+
+    <!--查询总数-->
+    <select id="SumSystemLog" resultType="long"  statementType="PREPARED" >
+        SELECT count(1) from systemlog
+    </select>
+
+</mapper>

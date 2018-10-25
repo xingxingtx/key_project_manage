@@ -1,0 +1,77 @@
+buildscript {
+	ext {
+		springBootVersion = '2.0.4.RELEASE'
+	}
+	repositories {
+		maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+		maven{url'http://mvn.gt.igexin.com/nexus/content/repositories/releases/'}
+		mavenCentral()
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:${springBootVersion}")
+	}
+}
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'org.springframework.boot'
+apply plugin: 'io.spring.dependency-management'
+apply plugin: 'war'
+
+group = 'com.aorise'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = 1.8
+
+repositories {
+	maven { url 'http://maven.aliyun.com/nexus/content/groups/public/' }
+	maven{url'http://mvn.gt.igexin.com/nexus/content/repositories/releases/'}
+	mavenCentral()
+}
+
+configurations {
+	providedRuntime
+}
+tasks.withType(JavaCompile) {
+	options.encoding = "UTF-8"
+}
+dependencies {
+	/***springboot基础依赖*/
+	compile('org.springframework.boot:spring-boot-starter-web')
+	/**postgresql依赖*/
+	compile group: 'org.postgresql', name: 'postgresql', version: '9.4.1212'
+
+	compile("org.springframework.boot:spring-boot-configuration-processor")
+	/**mybatis依赖*/
+	compile("org.mybatis.spring.boot:mybatis-spring-boot-starter:1.3.2")
+	/**json依赖**/
+	compile('com.google.code.gson:gson')
+	//swagger相关
+	compile("io.springfox:springfox-swagger-ui:2.7.0")
+	compile("io.springfox:springfox-swagger2:2.7.0")
+	//数据库连接池
+	compile group: 'com.alibaba', name: 'druid', version: '1.1.0'
+	/***字符操作相关依赖*/
+	compile group: 'org.apache.commons', name: 'commons-lang3', version: '3.6'
+	compile('org.springframework.boot:spring-boot-starter-tomcat')
+	testCompile('org.springframework.boot:spring-boot-starter-test')
+	compile group: 'org.json', name: 'json', version: '20171018'
+	compile 'net.sf.json-lib:json-lib:2.4:jdk15'
+	compile group: 'commons-fileupload', name: 'commons-fileupload', version: '1.3.3'
+	compile group: 'commons-io', name: 'commons-io', version: '2.4'
+	//时间工具依赖
+	compile group: 'joda-time',name: 'joda-time'
+	//shiro
+	compile group: 'org.apache.shiro', name: 'shiro-spring', version: '1.4.0'
+	/**个推*/
+	compile group: 'com.gexin.platform', name: 'gexin-rp-sdk-http', version: '4.1.0.0'
+	//poi
+	compile group: 'org.apache.poi', name: 'poi-ooxml', version: '3.14'
+	compile group: 'org.apache.poi', name: 'poi-ooxml-schemas', version: '3.14'
+    //fastJson
+	compile group: 'com.alibaba', name: 'fastjson', version: '1.2.4'
+	// aop
+	compile group: 'org.springframework.boot', name: 'spring-boot-starter-aop', version: '2.0.3.RELEASE'
+
+
+
+}

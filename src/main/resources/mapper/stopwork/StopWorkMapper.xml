@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.aorise.mapper.stopwork.StopWorkMapper">
+    <resultMap id="StopWorkInfo" type="com.aorise.model.stopwork.StopWorkInfoModel">
+        <id property="id" column="id"/>
+        <result property="projectId" column="project_id"/>
+        <result property="name" column="name"/>
+        <result property="stopTime" column="stop_time"/>
+        <result property="addr" column="addr"/>
+        <result property="preventReason" column="prevent_reason"/>
+        <result property="alertReporter" column="alert_reporter"/>
+        <result property="preventNumber" column="prevent_number"/>
+        <result property="preventReporter" column="prevent_reporter"/>
+        <result property="content" column="content"/>
+        <result property="disposeResult" column="dispose_result"/>
+        <result property="state" column="state"/>
+        <result property="createTime" column="create_time"/>
+        <result property="editTime" column="edit_time"/>
+        <result property="creater" column="creater"/>
+        <result property="editer" column="editer"/>
+        <result property="county" column="county"/>
+        <result property="disposeState" column="dispose_state"/>
+        <result property="isSatisfy" column="is_satisfy"/>
+        <result property="other" column="other"/>
+    </resultMap>
+    <resultMap id="StopWork" type="com.aorise.model.stopwork.StopWorkModel">
+            <id column="id" property="id"/>
+            <result property="workId" column="workid"/>
+            <result property="disposePeople" column="dispose_people"/>
+            <result property="fulfillTime" column="fulfill_time"/>
+            <result property="fulfillRequire" column="fulfill_require"/>
+            <result property="disposeTime" column="dispose_time"/>
+            <result property="appointedResults" column="appointed_results"/>
+            <result property="state" column="state"/>
+            <result property="creater" column="creater"/>
+            <result property="createTime" column="create_time"/>
+            <result property="editer" column="editer"/>
+            <result property="editTime" column="edit_time"/>
+            <result property="disposeState" column="dispose_state"/>
+    </resultMap>
+
+    <resultMap id="StopWorkInfoAndImg" type="com.aorise.model.stopwork.StopWorkInfoModel">
+        <id property="id" column="id"/>
+        <result property="projectId" column="project_id"/>
+        <result property="name" column="name"/>
+        <result property="stopTime" column="stop_time"/>
+        <result property="addr" column="addr"/>
+        <result property="preventReason" column="prevent_reason"/>
+        <result property="alertReporter" column="alert_reporter"/>
+        <result property="preventNumber" column="prevent_number"/>
+        <result property="preventReporter" column="prevent_reporter"/>
+        <result property="content" column="content"/>
+        <result property="disposeResult" column="dispose_result"/>
+        <result property="state" column="state"/>
+        <result property="createTime" column="create_time"/>
+        <result property="editTime" column="edit_time"/>
+        <result property="creater" column="creater"/>
+        <result property="editer" column="editer"/>
+        <result property="county" column="county"/>
+        <result property="disposeState" column="dispose_state"/>
+        <result property="isSatisfy" column="is_satisfy"/>
+        <result property="cause" column="cause"/>
+        <result property="other" column="other"/>
+        <result property="createName" column="createName"/>
+        <collection property="imgList" ofType="com.aorise.model.imgfile.ImgFileModel">
+            <id column="iid" property="id" jdbcType="INTEGER" javaType="INTEGER"></id>
+            <result column="relation_id" property="relationId" jdbcType="INTEGER" javaType="INTEGER"></result>
+            <result column="type" property="type" jdbcType="INTEGER" javaType="INTEGER"></result>
+            <result column="url" property="url" jdbcType="VARCHAR" javaType="String"></result>
+        </collection>
+    </resultMap>
+    <resultMap id="StopWorkAndImg" type="com.aorise.model.stopwork.StopWorkModel">
+        <id column="id" property="id"/>
+        <result property="workId" column="workid"/>
+        <result property="disposePeople" column="dispose_people"/>
+        <result property="fulfillTime" column="fulfill_time"/>
+        <result property="fulfillRequire" column="fulfill_require"/>
+        <result property="disposeTime" column="dispose_time"/>
+        <result property="appointedResults" column="appointed_results"/>
+        <result property="state" column="state"/>
+        <result property="creater" column="creater"/>
+        <result property="createTime" column="create_time"/>
+        <result property="editer" column="editer"/>
+        <result property="editTime" column="edit_time"/>
+        <result property="disposeState" column="dispose_state"/>
+        <collection property="imgList" ofType="com.aorise.model.imgfile.ImgFileModel">
+            <id column="iid" property="id" jdbcType="INTEGER" javaType="INTEGER"></id>
+            <result column="relation_id" property="relationId" jdbcType="INTEGER" javaType="INTEGER"></result>
+            <result column="type" property="type" jdbcType="INTEGER" javaType="INTEGER"></result>
+            <result column="url" property="url" jdbcType="VARCHAR" javaType="String"></result>
+        </collection>
+    </resultMap>
+    <sql id="stopWorkInfo">
+          s.id,
+          s.project_id,
+          s.name,
+          s.stop_time,
+          s.addr,
+          s.prevent_reason,
+          s.alert_reporter,
+          s.prevent_number,
+          s.prevent_reporter,
+          s.content,
+          s.dispose_result,
+          s.dispose_state,
+          s.state,
+          s.creater,
+          s.create_time,
+          s.editer,
+          s.edit_time,
+          s.county,
+          s.is_satisfy,
+          s.other
+    </sql>
+    <sql id="stopWork">
+          s.id,
+          s.workid,s.dispose_people,
+          s.fulfill_time,s.fulfill_require,
+          s.dispose_time,s.appointed_results,
+          s.state,s.creater,s.create_time,
+          s.editer,s.edit_time,s.dispose_state
+    </sql>
+    <sql id="stopWorkList">
+        s.id,
+        s.name,
+        s.stop_time,
+        s.prevent_reason,
+        s.prevent_number,
+        s.dispose_state,
+        s.state,
+        s.creater,
+        s.create_time
+        s.other
+    </sql>
+    <!--施工现场阻工处理数据插入-->
+   <insert id="addStopWork" statementType="PREPARED"  useGeneratedKeys="true" keyProperty="model.id">
+        INSERT INTO
+        stop_work
+        (
+          workid,dispose_people,
+          fulfill_time,fulfill_require,
+          state,creater,create_time,dispose_state
+        )
+        VALUES
+        (
+          cast(#{model.workId} as integer),#{model.disposePeople},
+          #{model.fulfillTime},#{model.fulfillRequire},
+          #{model.state},cast(#{userId} as integer),now(),cast(#{model.disposeState} as integer)
+        )
+   </insert>
+    <!--施工现场阻工详情插入-->
+    <insert id="addStopWorkInfo" statementType="PREPARED"  useGeneratedKeys="true" keyProperty="model.id">
+        INSERT INTO
+        stop_work_info
+        (
+          project_id,name,
+          stop_time,addr,
+          prevent_number,prevent_reason,
+          dispose_result,dispose_state,
+          state,creater,create_time,
+          county,content,alert_reporter,other
+        )
+        VALUES
+        (
+          #{model.projectId},#{model.name},
+          #{model.stopTime},#{model.addr},
+          #{model.preventNumber},#{model.preventReason},
+          #{model.disposeResult}, cast(#{model.disposeState} as integer),
+          #{model.state},cast(#{userId} as integer),
+          now(),#{model.county},#{model.content},#{model.alertReporter},#{model.other}
+        )
+    </insert>
+    <!--更新施工现场阻工处理数据-->
+    <update id="updateStopWork">
+        UPDATE
+        stop_work
+        SET
+            dispose_time  = #{model.disposeTime},
+        <if test="model.appointedResults != null and model.appointedResults != ''">
+            appointed_results  = #{model.appointedResults},
+        </if>
+        <if test="model.disposeState != null and model.disposeState != ''">
+            dispose_state = cast(#{model.disposeState} as integer),
+        </if>
+        edit_time = now(),editer = cast(#{editer} as integer)
+        WHERE id = #{model.id}
+    </update>
+
+    <!--更新施工现场阻工数据-->
+    <update id="updateStopWorkInfo">
+        UPDATE
+        stop_work_info
+        SET
+        <if test="model.isSatisfy != null and model.isSatisfy != ''">
+        is_satisfy  = cast(#{model.isSatisfy} as integer),
+        </if>
+        <if test="model.cause != null and model.cause != ''">
+        cause  = #{model.cause},
+        </if>
+        <if test="model.disposeState != null and model.disposeState != ''">
+            dispose_state = #{model.disposeState},
+        </if>
+        edit_time = now(),editer = cast(#{editer} as integer)
+        WHERE id = #{model.id}
+    </update>
+    <!--分页查询-->
+    <select id="getAllByPage" resultMap="StopWorkInfo" parameterType="java.util.Map" statementType="PREPARED">
+        SELECT
+        <include refid="stopWorkInfo"/>,
+        (SELECT  count(1) FROM project_com_info WHERE project_id =s.project_id  and state= cast(#{state} as integer) and s.id = relate_id) AS commentCount,
+        (
+        COALESCE((select a.name FROM area_info a WHERE a.area_code = pr.county),'')
+        ||
+        COALESCE((select a.name FROM area_info a WHERE a.area_code = pr.township),'')
+        ||
+        COALESCE((select a.name FROM area_info a WHERE a.area_code =pr.village),'')
+        ) AS detailedAddr
+        FROM stop_work_info s
+        left join project_addr_info pr
+        ON s.project_id = pr.project_id and pr.id in (select min(t3.id) from project_addr_info t3  group by t3.project_id) and pr.state = 1
+        WHERE 1=1
+        <if test="state!=null and state!=''">
+            AND s.state= cast(#{state} as integer)
+        </if>
+        <if test="countyCode!=null and countyCode!=''">
+            AND s.project_id in(SELECT project_id FROM project_addr_info WHERE county = #{countyCode})
+        </if>
+        <if test="villageCode!=null and villageCode!=''">
+            AND pr.township = #{villageCode}
+        </if>
+        <if test="hamletCode!=null and hamletCode!=''">
+            AND pr.village = #{hamletCode}
+        </if>
+        <if test="preventReason!=null and preventReason!='' and preventReason != 'a'.toString()">
+            AND s.prevent_reason like  CONCAT('%',#{preventReason},'%')
+        </if>
+        <if test="preventReason!=null and preventReason!='' and preventReason == 'a'.toString()">
+            AND s.other is not null
+        </if>
+        <if test="disposeState!=null and disposeState!=''">
+            AND s.dispose_state =cast(#{disposeState} as integer)
+        </if>
+        <if test="startTime!=null and startTime!=''">
+            AND <![CDATA[s.stop_time >= to_date(#{startTime},'yyyy-MM-dd hh24:mi:ss')]]>
+        </if>
+        <if test="endTime!=null and endTime!=''">
+            AND <![CDATA[s.stop_time <= to_date(#{endTime},'yyyy-MM-dd hh24:mi:ss')]]>
+        </if>
+        <if test="projectId != null and projectId != ''">
+            AND s.project_id = cast(#{projectId} as integer)
+        </if>
+        <if test="isSatisfy != null and isSatisfy !=''">
+            AND s.is_satisfy = cast(#{isSatisfy} as integer)
+        </if>
+        <if test="userId != null and userId !=''">
+            AND s.project_id in (select project_id from use_pro_info where user_id = cast(#{userId} as integer))
+        </if>
+        order by s.stop_time DESC
+        limit  #{endIndex} offset #{beginIndex}
+    </select>
+    <!--总数-->
+    <select id="getAllByPageCount" resultType="Integer" parameterType="java.util.Map" statementType="PREPARED">
+        SELECT
+        count(1)
+        FROM stop_work_info s
+        left join project_addr_info pr
+        ON s.project_id = pr.project_id and pr.id in (select min(t3.id) from project_addr_info t3  group by t3.project_id) and pr.state = 1
+        WHERE 1=1
+        <if test="state!=null and state!=''">
+            AND s.state= cast(#{state} as integer)
+        </if>
+        <if test="countyCode!=null and countyCode!=''">
+            AND s.project_id in(SELECT project_id FROM project_addr_info WHERE county = #{countyCode})
+        </if>
+        <if test="villageCode!=null and villageCode!=''">
+            AND pr.township = #{villageCode}
+        </if>
+        <if test="hamletCode!=null and hamletCode!=''">
+            AND pr.village = #{hamletCode}
+        </if>
+        <if test="preventReason!=null and preventReason!='' and preventReason != 'a'.toString()">
+            AND s.prevent_reason like  CONCAT('%',#{preventReason},'%')
+        </if>
+        <if test="preventReason!=null and preventReason!='' and preventReason == 'a'.toString()">
+            AND s.other is not null
+        </if>
+        <if test="disposeState!=null and disposeState!=''">
+            AND s.dispose_state =cast(#{disposeState} as integer)
+        </if>
+        <if test="startTime!=null and startTime!=''">
+            AND <![CDATA[s.stop_time >= to_date(#{startTime},'yyyy-MM-dd hh24:mi:ss')]]>
+        </if>
+        <if test="endTime!=null and endTime!=''">
+            AND <![CDATA[s.stop_time <= to_date(#{endTime},'yyyy-MM-dd hh24:mi:ss')]]>
+        </if>
+        <if test="projectId != null and projectId != ''">
+            AND s.project_id = cast(#{projectId} as integer)
+        </if>
+        <if test="isSatisfy != null and isSatisfy !=''">
+            AND s.is_satisfy = cast(#{isSatisfy} as integer)
+        </if>
+        <if test="userId != null and userId !=''">
+            AND s.project_id in (select project_id from use_pro_info where user_id = cast(#{userId} as integer))
+        </if>
+    </select>
+    <!--删除施工现场阻工数据-->
+    <delete id="delteStopWorkInfo" parameterType="integer">
+          UPDATE
+          stop_work_info
+          SET
+          state = #{state},
+          editer = #{editer}
+        WHERE id IN
+        <foreach collection="id" item="id" index="no" open="("
+                 separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+    <!--根据施工现场阻工id查询施工现场阻工处理信息-->
+    <select id="getStopWorkById" resultMap="StopWorkAndImg" parameterType="integer">
+          SELECT <include refid="stopWork"/>,
+            i.id as iid,
+            i.relation_id,
+            i.type,
+            i.url,
+          (SELECT full_name from sys_user where id = s.creater) as createName
+          FROM stop_work s LEFT JOIN imageinfo i ON i.relation_id = s.id and i.type = 33
+          WHERE s.workid = #{workid}
+          ORDER BY s.create_time ASC , i.create_time ASC
+    </select>
+
+    <select id="getStopWorkInfo" resultMap="StopWorkInfoAndImg" parameterType="integer">
+        SELECT  s.id,
+          s.project_id,
+          s.name,
+          s.stop_time,
+          s.addr,
+          s.prevent_reason,
+          s.alert_reporter,
+          s.prevent_number,
+          s.prevent_reporter,
+          s.content,
+          s.dispose_result,
+          s.dispose_state,
+          s.state,
+          s.creater,
+          s.create_time,
+          s.editer,
+          s.edit_time,
+          s.county,
+          s.other,
+          s.is_satisfy,
+          s.cause,
+          i.id as iid,
+          i.relation_id,
+          i.type,
+          i.url,
+        (select full_name FROM sys_user where id = s.creater)AS createName
+        FROM stop_work_info s LEFT JOIN imageinfo i ON i.relation_id = s.id and (i.type = 31 or i.type = 32)
+        WHERE 1 = 1
+        AND s.state = 1
+        AND s.id = #{id}
+        ORDER BY i.create_time ASC
+    </select>
+</mapper>

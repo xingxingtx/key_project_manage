@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.aorise.mapper.common.AreaInfoMapper">
+    <resultMap id="DetailMap" type="com.aorise.model.common.AreaInfoModel">
+        <result column="name" jdbcType="VARCHAR" property="name" />
+        <result column="parent_code" jdbcType="VARCHAR" property="parentCode" />
+        <result column="area_code" jdbcType="VARCHAR" property="areaCode" />
+    </resultMap>
+<select id="getListByParent" resultMap="DetailMap"  parameterType="String" statementType="PREPARED">
+    select name,area_code,parent_code FROM area_info where parent_code=#{code}
+</select>
+    <select id="getByChild" resultMap="DetailMap"  parameterType="String" statementType="PREPARED">
+select name,area_code,parent_code FROM area_info WHERE area_code=(select parent_code FROM area_info where area_code=#{code})
+    </select>
+    <select id="getById" resultMap="DetailMap"  parameterType="String" statementType="PREPARED">
+        select name,area_code,parent_code FROM area_info where area_code=#{code}
+    </select>
+
+    <select id="getAll" resultMap="DetailMap"  statementType="PREPARED">
+        select name,area_code,parent_code FROM area_info
+    </select>
+</mapper>

@@ -1,0 +1,785 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.aorise.mapper.projectdasecase.ProjectDaseCaseMapper">
+    <resultMap id="DetailMap" type="com.aorise.model.projectdasecase.ProjectDaseCaseModel">
+        <id column="id"  property="id" />
+        <result column="name"  property="name" />
+        <result column="is_skip"  property="isSkip" />
+        <result column="project_state"  property="projectState" />
+        <result column="progress"  property="progress" />
+    </resultMap>
+
+    <!--项目基本情况主表map-->
+    <resultMap id="ProjectMap" type="com.aorise.model.projectdasecase.ProjectDaseCaseModel">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="type" property="type"/>
+        <result column="set_time" property="setTime"/>
+        <result column="sum_money" property="sumMoney"/>
+        <result column="finish_money" property="finishMoney"/>
+        <result column="progress" property="progress"/>
+        <result column="project_state" property="projectState"/>
+        <result column="open_time" property="openTime"/>
+        <result column="completed_time" property="completedTime"/>
+        <result column="is_skip" property="isSkip"/>
+        <result column="pro_content" property="projectContent"/>
+        <result column="content" property="content"/>
+        <result column="state" property="state"/>
+        <result column="creater" property="creater"/>
+        <result column="create_time" property="createTime"/>
+        <result column="detailedAddr" property="detailedAddr"/>
+        <result column="commentCount" property="commentCount"/>
+        <result column="editer" property="editer"/>
+        <result column="edit_time" property="editTime"/>
+        <!--是否超时-->
+        <result column="is_overtime" jdbcType="INTEGER" javaType="Integer" property="isOvertime"/>
+
+        <collection property="projectAddrInfoModel" ofType="com.aorise.model.projectdasecase.ProjectAddrInfoModel">
+            <id column="addr_id" property="id"/>
+            <result column="project_id" property="projectid"/>
+            <result column="county" property="county"/>
+            <result column="county_person" property="countyPerson"/>
+            <result column="county_position" property="countyPosition"/>
+            <result column="county_phone" property="countyPhone"/>
+            <result column="township" property="township"/>
+            <result column="township_person" property="townshipPerson"/>
+            <result column="township_position" property="townshipPosition"/>
+            <result column="township_phone" property="townshipPhone"/>
+            <result column="village" property="village"/>
+            <result column="village_person" property="villagePerson"/>
+            <result column="positions" property="positions"/>
+            <result column="phone" property="phone"/>
+            <result column="progroup" property="progroup"/>
+            <result column="progroup_person" property="progroupPerson"/>
+            <result column="progroup_position" property="progroupPosition"/>
+            <result column="progroup_phone" property="progroupPhone"/>
+            <result column="detailed_addr" property="detailedAddr"/>
+            <result column="police_station" property="policeStation"/>
+            <result column="leader" property="leader"/>
+            <result column="leader_position" property="leaderPosition"/>
+            <result column="station_phone" property="stationPhone"/>
+            <result column="owner_corp" property="ownerCorp"/>
+            <result column="owner_contact" property="ownerContact"/>
+            <result column="owner_position" property="ownerPosition"/>
+            <result column="owner_phone" property="ownerPhone"/>
+            <result column="construction_org" property="constructionOrg"/>
+            <result column="construction_contact" property="constructionContact"/>
+            <result column="construction_position" property="constructionPosition"/>
+            <result column="construction_phone" property="constructionPhone"/>
+            <result column="longitude" property="longitude"/>
+            <result column="latitude" property="latitude"/>
+            <result column="state" property="state"/>
+            <result column="creater" property="creater"/>
+            <result column="create_time" property="createTime"/>
+            <result column="editer" property="editer"/>
+            <result column="edit_time" property="editTime"/>
+            <result column="countyName" property="countyName"/>
+            <result column="townshipName" property="townshipName"/>
+            <result column="villageName" property="villageName"/>
+        </collection>
+    </resultMap>
+
+    <!--项目基本情况地址表map-->
+    <resultMap id="ProjectAddrMap" type="com.aorise.model.projectdasecase.ProjectAddrInfoModel">
+        <id column="id" property="id"/>
+        <result column="project_id" property="projectid"/>
+        <result column="county" property="county"/>
+        <result column="county_person" property="countyPerson"/>
+        <result column="county_position" property="countyPosition"/>
+        <result column="county_phone" property="countyPhone"/>
+        <result column="township" property="township"/>
+        <result column="township_person" property="townshipPerson"/>
+        <result column="township_position" property="townshipPosition"/>
+        <result column="township_phone" property="townshipPhone"/>
+        <result column="village" property="village"/>
+        <result column="village_person" property="villagePerson"/>
+        <result column="positions" property="positions"/>
+        <result column="phone" property="phone"/>
+        <result column="progroup" property="progroup"/>
+        <result column="progroup_person" property="progroupPerson"/>
+        <result column="progroup_position" property="progroupPosition"/>
+        <result column="progroup_phone" property="progroupPhone"/>
+        <result column="detailed_addr" property="detailedAddr"/>
+        <result column="police_station" property="policeStation"/>
+        <result column="leader" property="leader"/>
+        <result column="leader_position" property="leaderPosition"/>
+        <result column="station_phone" property="stationPhone"/>
+        <result column="owner_corp" property="ownerCorp"/>
+        <result column="owner_contact" property="ownerContact"/>
+        <result column="owner_position" property="ownerPosition"/>
+        <result column="owner_phone" property="ownerPhone"/>
+        <result column="construction_org" property="constructionOrg"/>
+        <result column="construction_contact" property="constructionContact"/>
+        <result column="construction_position" property="constructionPosition"/>
+        <result column="construction_phone" property="constructionPhone"/>
+        <result column="longitude" property="longitude"/>
+        <result column="latitude" property="latitude"/>
+        <result column="state" property="state"/>
+        <result column="creater" property="creater"/>
+        <result column="create_time" property="createTime"/>
+        <result column="editer" property="editer"/>
+        <result column="edit_time" property="editTime"/>
+        <result column="countyName" property="countyName"/>
+        <result column="townshipName" property="townshipName"/>
+        <result column="villageName" property="villageName"/>
+        <result column="progroupName" property="progroupName"/>
+    </resultMap>
+
+    <resultMap id="BaseResultMap" type="com.aorise.model.system.SysUserModel">
+        <id column="id" property="id" jdbcType="INTEGER" javaType="Integer"></id>
+        <result column="user_name" property="userName" jdbcType="VARCHAR" javaType="String"></result>
+        <result column="full_name" property="fullName" jdbcType="VARCHAR" javaType="String"></result>
+        <result column="phone" property="phone" jdbcType="VARCHAR" javaType="String"></result>
+    </resultMap>
+
+    <!--根据项目名称查询该项目是否存在-->
+    <select id="getProjectByUserName" resultMap="DetailMap" parameterType="String" >
+        SELECT id,name,project_state,progress   FROM project_dase_case WHERE name = #{name} and state = 1
+    </select>
+    <!--根据项目id查询该项目是否存在-->
+    <select id="getProjectById" resultMap="DetailMap" parameterType="Integer" >
+        SELECT id,name,project_state ,progress   FROM project_dase_case WHERE id = #{id} and state = 1
+    </select>
+    <!--根据项目id查询项目详情-->
+    <select id="getProject" resultMap="ProjectMap" parameterType="Integer" >
+        select id,name,type,set_time,sum_money,finish_money,progress,project_state,open_time,completed_time,is_skip,pro_content,
+        content,state,creater,create_time,editer,edit_time from project_dase_case where 1=1 and id=#{id} and state = 1
+    </select>
+    <!--根据项目id查询项目地址详情-->
+    <select id="getProjectAddr" resultMap="ProjectAddrMap" parameterType="Integer" >
+        select pai.id,pai.project_id,pai.county,pai.county_person,pai.county_position,pai.county_phone,pai.township,pai.township_person,
+        pai.township_position,pai.township_phone,pai.village,pai.village_person,pai.positions,pai.phone,pai.progroup,pai.progroup_person,
+        pai.progroup_position,pai.progroup_phone,pai.detailed_addr,pai.police_station,pai.leader,pai.leader_position,pai.station_phone,
+        pai.owner_corp,pai.owner_contact,pai.owner_position,pai.owner_phone,pai.construction_org,pai.construction_contact,pai.construction_position,
+        pai.construction_phone,pai.longitude,pai.latitude,pai.state,pai.creater,pai.create_time,pai.editer,pai.edit_time,
+        ai.name as countyName,bi.name as townshipName,ci.name as villageName,di.name as progroupName
+        from project_addr_info pai
+        left join area_info ai on ai.area_code=pai.county
+        left join area_info bi on bi.area_code=pai.township
+        left join area_info ci on ci.area_code=pai.village
+        left join area_info di on di.area_code=pai.progroup
+        where 1=1 and pai.project_id=#{id} and pai.state = 1 ORDER BY id
+    </select>
+
+    <!--查询预警员列表-->
+    <select id="findUser" resultMap="BaseResultMap" parameterType="Integer" >
+        select su.id,su.user_name,su.full_name,su.phone
+        from sys_user su
+        inner join use_pro_info upi on upi.user_id=su.id
+        inner join project_addr_info pdi on pdi.project_id=upi.project_id
+        where 1=1 and pdi.project_id=#{porId} and pdi.state = 1
+    </select>
+
+    <!--分页查找联保信息总条数-->
+    <select id="queryProjectdasecaseByPageCount" resultType="long" parameterType="java.util.Map" statementType="PREPARED" >
+        SELECT count(1) from (
+        select
+        projectListInfo.id,
+        projectListInfo.name,
+        projectListInfo.type,
+        projectListInfo.set_time,
+        projectListInfo.sum_money,
+        projectListInfo.finish_money,
+        projectListInfo.progress,
+        projectListInfo.project_state,
+        projectListInfo.open_time,
+        projectListInfo.completed_time,
+        projectListInfo.is_skip,
+        projectListInfo.pro_content,
+        projectListInfo.content,
+        projectListInfo.state,
+        projectListInfo.creater,
+        projectListInfo.create_time,
+        projectListInfo.editer,
+        projectListInfo.edit_time,
+        projectListInfo.commentCount,
+        Max(projectListInfo.detailedAddr) as detailedAddr,
+        projectListInfo.is_overtime
+        from (
+
+        SELECT
+        <include refid="proSql"/>,
+        (SELECT  count(1) FROM project_com_info WHERE project_id =pdc.id  and state= #{state}) AS commentCount,
+        (COALESCE ((SELECT a.name FROM area_info as a WHERE a.area_code = pr.county),'')  ||
+        COALESCE ((SELECT a.name FROM area_info as a WHERE a.area_code =pr.township),'')  ||
+        COALESCE ((SELECT a.name FROM area_info as a  WHERE a.area_code =pr.village),'')) AS detailedAddr,
+        (case when (pdc.completed_time &lt;= now() and pdc.project_state!=5) then 1 else 2 end) as is_overtime
+        FROM project_dase_case as pdc
+        left join project_addr_info pr
+        on pdc.id = pr.project_id
+        WHERE 1=1 and pr.state = 1 and pdc.state=1
+        <if test="isOverTime !=null and isOverTime != ''">
+            and  (case when (pdc.completed_time &lt;= now() and pdc.project_state!=5) then 1 else 2 end) = cast(#{isOverTime} as integer)
+        </if>
+
+        <if test="state!=null and state!=''">
+            AND pdc.state= #{state}
+        </if>
+        <if test="county!=null and county!=''">
+            AND pr.county = #{county}
+        </if>
+        <if test="township!=null and township!=''">
+            AND pr.township = #{township}
+        </if>
+        <if test="village!=null and village!=''">
+            AND pr.village = #{village}
+        </if>
+        <if test="type!=null and type!=''">
+            AND pdc.type = #{type}
+        </if>
+        <if test="projectState!=null and projectState!=''">
+            AND pdc.project_state in (${projectState})
+        </if>
+        <if test="isSkip!=null and isSkip!=''">
+            AND pdc.is_skip =cast(#{isSkip} as integer)
+        </if>
+
+        <if test="caseTimeStart!=null and caseTimeStart!=''">
+            AND <![CDATA[pdc.open_time >= to_timestamp(#{caseTimeStart},'yyyy-mm-dd hh24:mi:ss')]]>
+        </if>
+        <if test="caseTimeEnd!=null and caseTimeEnd!=''">
+            AND <![CDATA[pdc.open_time <=to_timestamp(#{caseTimeEnd},'yyyy-mm-dd hh24:mi:ss')]]>
+        </if>
+        <if test="userId != null and userId !=''">
+            AND pr.project_id in (select project_id from use_pro_info where user_id = cast(#{userId} as integer))
+        </if>
+        ) as projectListInfo
+        group by
+        projectListInfo.id,
+        projectListInfo.name,
+        projectListInfo.type,
+        projectListInfo.set_time,
+        projectListInfo.sum_money,
+        projectListInfo.finish_money,
+        projectListInfo.progress,
+        projectListInfo.project_state,
+        projectListInfo.open_time,
+        projectListInfo.completed_time,
+        projectListInfo.is_skip,
+        projectListInfo.pro_content,
+        projectListInfo.content,
+        projectListInfo.state,
+        projectListInfo.creater,
+        projectListInfo.create_time,
+        projectListInfo.editer,
+        projectListInfo.edit_time,
+        projectListInfo.commentCount,
+        projectListInfo.is_overtime
+        order by projectListInfo.project_state asc,
+        projectListInfo.open_time desc
+
+        ) as aa
+    </select>
+
+
+    <!--App客户端分页查找联保信息总条数-->
+    <select id="queryProjectdasecaseByPageAppCount" resultType="long" parameterType="java.util.Map" statementType="PREPARED" >
+        SELECT count(1) from (
+        select
+        projectListInfo.id,
+        projectListInfo.name,
+        projectListInfo.type,
+        projectListInfo.set_time,
+        projectListInfo.sum_money,
+        projectListInfo.finish_money,
+        projectListInfo.progress,
+        projectListInfo.project_state,
+        projectListInfo.open_time,
+        projectListInfo.completed_time,
+        projectListInfo.is_skip,
+        projectListInfo.pro_content,
+        projectListInfo.content,
+        projectListInfo.state,
+        projectListInfo.creater,
+        projectListInfo.create_time,
+        projectListInfo.editer,
+        projectListInfo.edit_time,
+        projectListInfo.commentCount,
+        Max(projectListInfo.detailedAddr) as detailedAddr
+        from (
+
+        SELECT
+        <include refid="proSql"/>,
+        (SELECT  count(1) FROM project_com_info WHERE project_id =pdc.id  and state= #{state}) AS commentCount,
+        (COALESCE ((SELECT a.name FROM area_info as a WHERE a.area_code = pr.county),'')  ||
+        COALESCE ((SELECT a.name FROM area_info as a WHERE a.area_code =pr.township),'')  ||
+        COALESCE ((SELECT a.name FROM area_info as a  WHERE a.area_code =pr.village),'')) AS detailedAddr
+        FROM project_dase_case as pdc
+        left join project_addr_info pr
+        on pdc.id = pr.project_id
+        WHERE 1=1 and pr.state = 1 and pdc.state=1
+        <if test="state!=null and state!=''">
+            AND pdc.state= #{state}
+        </if>
+        <if test="county!=null and county!=''">
+            AND pr.county = #{county}
+        </if>
+        <if test="township!=null and township!=''">
+            AND pr.township = #{township}
+        </if>
+        <if test="village!=null and village!=''">
+            AND pr.village = #{village}
+        </if>
+        <if test="type!=null and type!=''">
+            AND pdc.type in (${type})
+        </if>
+        <if test="projectState!=null and projectState!=''">
+            AND pdc.project_state in (${projectState})
+        </if>
+        <if test="name!=null and name!=''">
+            AND pdc.name like '%${name}%'
+        </if>
+        <if test="userId != null and userId !=''">
+            AND pr.project_id in (select project_id from use_pro_info where user_id = cast(#{userId} as integer))
+        </if>
+        ) as projectListInfo
+        group by
+        projectListInfo.id,
+        projectListInfo.name,
+        projectListInfo.type,
+        projectListInfo.set_time,
+        projectListInfo.sum_money,
+        projectListInfo.finish_money,
+        projectListInfo.progress,
+        projectListInfo.project_state,
+        projectListInfo.open_time,
+        projectListInfo.completed_time,
+        projectListInfo.is_skip,
+        projectListInfo.pro_content,
+        projectListInfo.content,
+        projectListInfo.state,
+        projectListInfo.creater,
+        projectListInfo.create_time,
+        projectListInfo.editer,
+        projectListInfo.edit_time,
+        projectListInfo.commentCount
+        order by projectListInfo.project_state asc,
+        projectListInfo.open_time desc
+        ) as aa
+    </select>
+
+    <!--分页查找联保信息-->
+    <sql id="proSql">
+            pdc.id,
+            pdc.name,
+            pdc.type,
+            pdc.set_time,
+            pdc.sum_money,
+            pdc.finish_money,
+            pdc.progress,
+            pdc.project_state,
+            pdc.open_time,
+            pdc.completed_time,
+            pdc.is_skip,
+            pdc.pro_content,
+            pdc.content,
+            pdc.state,
+            pdc.creater,
+            pdc.create_time,
+            pdc.editer,
+            pdc.edit_time
+    </sql>
+    <select id="queryProjectdasecaseByPage" resultMap="ProjectMap" parameterType="java.util.Map" statementType="PREPARED" >
+        select
+        projectListInfo.id,
+        projectListInfo.name,
+        projectListInfo.type,
+        projectListInfo.set_time,
+        projectListInfo.sum_money,
+        projectListInfo.finish_money,
+        projectListInfo.progress,
+        projectListInfo.project_state,
+        projectListInfo.open_time,
+        projectListInfo.completed_time,
+        projectListInfo.is_skip,
+        projectListInfo.pro_content,
+        projectListInfo.content,
+        projectListInfo.state,
+        projectListInfo.creater,
+        projectListInfo.create_time,
+        projectListInfo.editer,
+        projectListInfo.edit_time,
+        projectListInfo.commentCount,
+        Max(projectListInfo.detailedAddr) as detailedAddr,
+        projectListInfo.is_overtime
+        from (
+
+        SELECT
+        <include refid="proSql"/>,
+        (SELECT  count(1) FROM project_com_info WHERE project_id =pdc.id  and state= #{state}) AS commentCount,
+        (COALESCE ((SELECT a.name FROM area_info as a WHERE a.area_code = pr.county),'')  ||
+        COALESCE ((SELECT a.name FROM area_info as a WHERE a.area_code =pr.township),'')  ||
+        COALESCE ((SELECT a.name FROM area_info as a  WHERE a.area_code =pr.village),'')) AS detailedAddr,
+        (case when (pdc.completed_time &lt;= now() and pdc.project_state!=5) then 1 else 2 end) as is_overtime
+        FROM project_dase_case as pdc
+        left join project_addr_info pr
+        on pdc.id = pr.project_id
+        WHERE 1=1 and pr.state = 1 and pdc.state=1
+        <if test="isOverTime !=null and isOverTime != ''">
+            and  (case when (pdc.completed_time &lt;= now() and pdc.project_state!=5) then 1 else 2 end) = cast(#{isOverTime} as integer)
+        </if>
+
+        <if test="state!=null and state!=''">
+            AND pdc.state= #{state}
+        </if>
+        <if test="county!=null and county!=''">
+            AND pr.county = #{county}
+        </if>
+        <if test="township!=null and township!=''">
+            AND pr.township = #{township}
+        </if>
+        <if test="village!=null and village!=''">
+            AND pr.village = #{village}
+        </if>
+        <if test="type!=null and type!=''">
+            AND pdc.type = #{type}
+        </if>
+        <if test="projectState!=null and projectState!=''">
+            AND pdc.project_state in (${projectState})
+        </if>
+        <if test="isSkip!=null and isSkip!=''">
+            AND pdc.is_skip =cast(#{isSkip} as integer)
+        </if>
+
+        <if test="caseTimeStart!=null and caseTimeStart!=''">
+            AND <![CDATA[pdc.open_time >= to_timestamp(#{caseTimeStart},'yyyy-mm-dd hh24:mi:ss')]]>
+        </if>
+        <if test="caseTimeEnd!=null and caseTimeEnd!=''">
+            AND <![CDATA[pdc.open_time <=to_timestamp(#{caseTimeEnd},'yyyy-mm-dd hh24:mi:ss')]]>
+        </if>
+        <if test="userId != null and userId !=''">
+            AND  pr.project_id in (select project_id from use_pro_info where user_id = cast(#{userId} as integer)
+        </if>
+        ) as projectListInfo
+        group by
+        projectListInfo.id,
+        projectListInfo.name,
+        projectListInfo.type,
+        projectListInfo.set_time,
+        projectListInfo.sum_money,
+        projectListInfo.finish_money,
+        projectListInfo.progress,
+        projectListInfo.project_state,
+        projectListInfo.open_time,
+        projectListInfo.completed_time,
+        projectListInfo.is_skip,
+        projectListInfo.pro_content,
+        projectListInfo.content,
+        projectListInfo.state,
+        projectListInfo.creater,
+        projectListInfo.create_time,
+        projectListInfo.editer,
+        projectListInfo.edit_time,
+        projectListInfo.commentCount,
+        projectListInfo.is_overtime
+        order by projectListInfo.project_state asc,
+        projectListInfo.open_time desc
+        limit  #{endIndex} offset #{beginIndex}
+
+    </select>
+
+
+
+    <!--App客户端分页查找联保信息-->
+    <select id="queryProjectdasecaseAppByPage" resultMap="ProjectMap" parameterType="java.util.Map" statementType="PREPARED" >
+        select
+        projectListInfo.id,
+        projectListInfo.name,
+        projectListInfo.type,
+        projectListInfo.set_time,
+        projectListInfo.sum_money,
+        projectListInfo.finish_money,
+        projectListInfo.progress,
+        projectListInfo.project_state,
+        projectListInfo.open_time,
+        projectListInfo.completed_time,
+        projectListInfo.is_skip,
+        projectListInfo.pro_content,
+        projectListInfo.content,
+        projectListInfo.state,
+        projectListInfo.creater,
+        projectListInfo.create_time,
+        projectListInfo.editer,
+        projectListInfo.edit_time,
+        projectListInfo.commentCount,
+        Max(projectListInfo.detailedAddr) as detailedAddr
+        from (
+
+        SELECT
+        <include refid="proSql"/>,
+        (SELECT  count(1) FROM project_com_info WHERE project_id =pdc.id  and state= #{state}) AS commentCount,
+        (COALESCE ((SELECT a.name FROM area_info as a WHERE a.area_code = pr.county),'')  ||
+        COALESCE ((SELECT a.name FROM area_info as a WHERE a.area_code =pr.township),'')  ||
+        COALESCE ((SELECT a.name FROM area_info as a  WHERE a.area_code =pr.village),'')) AS detailedAddr
+        FROM project_dase_case as pdc
+        left join project_addr_info pr
+        on pdc.id = pr.project_id
+        WHERE 1=1 and pr.state = 1 and pdc.state=1
+        <if test="state!=null and state!=''">
+            AND pdc.state= #{state}
+        </if>
+        <if test="county!=null and county!=''">
+            AND pr.county = #{county}
+        </if>
+        <if test="township!=null and township!=''">
+            AND pr.township = #{township}
+        </if>
+        <if test="village!=null and village!=''">
+            AND pr.village = #{village}
+        </if>
+        <if test="type!=null and type!=''">
+            AND pdc.type in (${type})
+        </if>
+        <if test="projectState!=null and projectState!=''">
+            AND pdc.project_state in (${projectState})
+        </if>
+        <if test="name!=null and name!=''">
+            AND pdc.name like '%${name}%'
+        </if>
+        <if test="userId != null and userId !=''">
+            AND pr.project_id in (select project_id from use_pro_info where user_id = cast(#{userId} as integer)
+        </if>
+        ) as projectListInfo
+        group by
+        projectListInfo.id,
+        projectListInfo.name,
+        projectListInfo.type,
+        projectListInfo.set_time,
+        projectListInfo.sum_money,
+        projectListInfo.finish_money,
+        projectListInfo.progress,
+        projectListInfo.project_state,
+        projectListInfo.open_time,
+        projectListInfo.completed_time,
+        projectListInfo.is_skip,
+        projectListInfo.pro_content,
+        projectListInfo.content,
+        projectListInfo.state,
+        projectListInfo.creater,
+        projectListInfo.create_time,
+        projectListInfo.editer,
+        projectListInfo.edit_time,
+        projectListInfo.commentCount
+        order by projectListInfo.project_state asc,
+        projectListInfo.open_time desc
+        limit  #{endIndex} offset #{beginIndex}
+
+    </select>
+    <!--返回excel数据-->
+    <select id="queryProjectdasecaseExcel" resultMap="ProjectMap" parameterType="java.util.Map" statementType="PREPARED" >
+
+        SELECT
+        <include refid="proSql"/>,
+        (SELECT  count(1) FROM project_com_info WHERE project_id =pdc.id  and state= cast(#{state} as integer)) AS commentCount,
+        ((SELECT a.name FROM area_info as a WHERE a.area_code = pai.county)  ||
+        (SELECT a.name FROM area_info as a WHERE a.area_code =pai.township)  ||
+        (SELECT a.name FROM area_info as a  WHERE a.area_code =pai.village)) AS detailedAddr,
+        (case when (pdc.completed_time &lt; now() and pdc.project_state!=5) then 1 else 2 end) as is_overtime,
+
+        pai.id as addr_id,pai.project_id,pai.county,pai.county_person,pai.county_position,pai.county_phone,pai.township,pai.township_person,
+        pai.township_position,pai.township_phone,pai.village,pai.village_person,pai.positions,pai.phone,pai.progroup,pai.progroup_person,
+        pai.progroup_position,pai.progroup_phone,pai.detailed_addr,pai.police_station,pai.leader,pai.leader_position,pai.station_phone,
+        pai.owner_corp,pai.owner_contact,pai.owner_position,pai.owner_phone,pai.construction_org,pai.construction_contact,pai.construction_position,
+        pai.construction_phone,pai.longitude,pai.latitude,pai.state,pai.creater,pai.create_time,pai.editer,pai.edit_time,
+        ai.name as countyName,aj.name as townshipName,ak.name as villageName
+
+        FROM project_dase_case as pdc
+        left join project_addr_info pai on pdc.id = pai.project_id and pai.state = 1
+        left join area_info ai on ai.area_code=pai.county
+        left join area_info aj on aj.area_code=pai.township
+        left join area_info ak on ak.area_code=pai.village
+        WHERE 1=1
+        <if test="state!=null and state!=''">
+            AND pdc.state= #{state}
+        </if>
+        <if test="county!=null and county!=''">
+            AND pai.county = #{county}
+        </if>
+        <if test="township!=null and township!=''">
+            AND pai.township = #{township}
+        </if>
+        <if test="village!=null and village!=''">
+            AND pai.village = #{village}
+        </if>
+        <if test="type!=null and type!=''">
+            AND pdc.type = #{type}
+        </if>
+        <if test="projectState!=null and projectState!=''">
+            AND pdc.project_state in (${projectState})
+        </if>
+        <if test="isSkip!=null and isSkip!=''">
+            AND pdc.is_skip =cast(#{isSkip} as integer)
+        </if>
+        <if test="isOverTime==1 and  isOverTime!=null and isOverTime!=''">
+            AND <![CDATA[
+              pdc.completed_time <= now() AND pdc.project_state !=5
+           ]]>
+        </if>
+        <if test="isOverTime==2 and  isOverTime!=null and isOverTime!=''">
+            AND <![CDATA[
+              pdc.completed_time >= now() AND pdc.project_state =5
+           ]]>
+        </if>
+        <if test="caseTimeStart!=null and caseTimeStart!=''">
+            AND <![CDATA[pdc.open_time >= to_timestamp(#{caseTimeStart},'yyyy-mm-dd hh24:mi:ss')]]>
+        </if>
+        <if test="caseTimeEnd!=null and caseTimeEnd!=''">
+            AND <![CDATA[pdc.open_time >=to_timestamp(#{caseTimeEnd},'yyyy-mm-dd hh24:mi:ss')]]>
+        </if>
+        order by pdc.create_time DESC
+
+    </select>
+
+    <!--添加项目基本详情-->
+    <insert id="addProject" parameterType="com.aorise.model.projectdasecase.ProjectDaseCaseModel" statementType="PREPARED"  useGeneratedKeys="true" keyProperty="id" >
+        INSERT INTO project_dase_case
+        (name , type ,
+        set_time ,sum_money,
+        finish_money, progress,
+        project_state,open_time,
+        completed_time,is_skip,
+        pro_content,content,create_time,
+        state
+        )
+        VALUES
+        (#{name} ,#{type},
+        to_timestamp(#{setTime},'yyyy-mm-dd hh24:mi:ss'),
+        #{sumMoney},
+        #{finishMoney},#{progress},
+        #{projectState},to_timestamp(#{openTime},'yyyy-mm-dd hh24:mi:ss'),
+        <if test="completedTime != null and completedTime != ''" >
+       to_timestamp(#{completedTime},'yyyy-mm-dd hh24:mi:ss'),
+        </if>
+        #{isSkip},
+        #{projectContent},#{content},to_timestamp(#{createTime},'yyyy-mm-dd hh24:mi:ss'),
+        #{state}
+        )
+    </insert>
+    <!--添加项目基本详情地址信息-->
+    <insert id="addProjectAddr" parameterType="com.aorise.model.projectdasecase.ProjectAddrInfoModel"
+            useGeneratedKeys="true" keyProperty="id" statementType="PREPARED" >
+        INSERT INTO project_addr_info
+        (project_id ,county,
+        county_person,county_position,
+        county_phone,township,
+        township_person,township_position,
+        township_phone,village,
+        village_person,positions,
+        phone,progroup,
+        progroup_person,progroup_position,
+        progroup_phone,detailed_addr,
+        police_station,leader,
+        leader_position,station_phone,
+        owner_corp,owner_contact,
+        owner_position,owner_phone,
+        construction_org,construction_contact,
+        construction_position,construction_phone,
+        longitude,latitude,create_time,
+        state
+        )
+        VALUES
+        (#{projectid}, #{county},
+        #{countyPerson},#{countyPosition},
+        #{countyPhone},#{township},
+        #{townshipPerson},#{townshipPosition},
+        #{townshipPhone},#{village},
+        #{villagePerson},#{positions},
+        #{phone},#{progroup},
+        #{progroupPerson},#{progroupPosition},
+        #{progroupPhone},#{detailedAddr},
+        #{policeStation},#{leader},
+        #{leaderPosition},#{stationPhone},
+        #{ownerCorp},#{ownerContact},
+        #{ownerPosition},#{ownerPhone},
+        #{constructionOrg},#{constructionContact},
+        #{constructionPosition},#{constructionPhone},
+        #{longitude},#{latitude},to_timestamp(#{createTime},'yyyy-mm-dd hh24:mi:ss'),
+        #{state}
+        )
+    </insert>
+    <!--增加项目详细地址 预警员中间表-->
+    <insert id="insertWarnProject"  statementType="PREPARED" >
+        insert into use_pro_info(user_id,project_id)values(#{useId},#{porId})
+    </insert>
+
+    <!--删除项目详细地址 预警员中间表-->
+    <delete id="deleteWarnProject" parameterType="Integer">
+        DELETE FROM "public"."use_pro_info" WHERE project_id=#{porId}
+    </delete>
+
+
+    <!--根据项目id编辑项目主表信息-->
+    <update id="updProject" parameterType="com.aorise.model.projectdasecase.ProjectDaseCaseModel" statementType="PREPARED">
+        update "public"."project_dase_case"
+        set
+        "name"=#{name},"type"=#{type},
+        "set_time"=to_timestamp(#{setTime},'yyyy-mm-dd hh24:mi:ss'),
+        "sum_money"=#{sumMoney},
+        "finish_money"=#{finishMoney},"progress"=#{progress},
+        "project_state"=#{projectState},"open_time"=to_timestamp(#{openTime},'yyyy-mm-dd hh24:mi:ss'),
+        <if test="completedTime != null and completedTime != ''" >
+        "completed_time"=to_timestamp(#{completedTime},'yyyy-mm-dd hh24:mi:ss'),
+        </if>
+        "is_skip"=#{isSkip},
+        "pro_content"=#{projectContent},"content"=#{content},"edit_time"=to_timestamp(#{editTime},'yyyy-mm-dd hh24:mi:ss')  WHERE id=#{id}
+
+    </update>
+    <!--根据项目id编辑项目分表信息-->
+    <update id="updProjectAddr" parameterType="com.aorise.model.projectdasecase.ProjectAddrInfoModel" statementType="PREPARED">
+        update project_addr_info
+        set
+        county=#{county},county_person=#{countyPerson},
+        county_position=#{countyPosition},county_phone=#{countyPhone},
+        township=#{township},township_person=#{townshipPerson},
+        township_position=#{townshipPosition},township_phone=#{townshipPhone},
+        village=#{village},village_person=#{villagePerson},
+        positions=#{positions},phone=#{phone},
+        progroup=#{progroup},progroup_person=#{progroupPerson},
+        progroup_position=#{progroupPosition},progroup_phone=#{progroupPhone},
+        detailed_addr=#{detailedAddr},police_station=#{policeStation},
+        leader=#{leader},leader_position=#{leaderPosition},
+        station_phone=#{stationPhone},owner_corp=#{ownerCorp},
+        owner_contact=#{ownerContact},owner_position=#{ownerPosition},
+        owner_phone=#{ownerPhone},construction_org=#{constructionOrg},
+        construction_contact=#{constructionContact},construction_position=#{constructionPosition},
+        construction_phone=#{constructionPhone},longitude=#{longitude},edit_time=to_timestamp(#{editTime},'yyyy-mm-dd hh24:mi:ss'),
+        latitude=#{latitude}
+        WHERE id = #{id}
+    </update>
+    <!--根据项目id删除基本信息-->
+    <update id="delProject" parameterType="com.aorise.model.projectdasecase.ProjectDaseCaseModel" statementType="PREPARED">
+        update project_dase_case
+        set
+        state=#{state}
+        WHERE id=#{id}
+    </update>
+    <!--根据项目id删除基本信息地址-->
+    <update id="delProjectaddr" parameterType="com.aorise.model.projectdasecase.ProjectAddrInfoModel" statementType="PREPARED">
+        update project_addr_info set state=#{state} WHERE project_id=#{projectid}
+    </update>
+    <!--根据区县，乡镇，村庄查询项目-->
+    <select id="getProjectList" resultMap="ProjectMap" parameterType="java.util.Map">
+        SELECT
+        pr.id,
+        pr.name
+        FROM
+        project_dase_case pr
+        LEFT JOIN
+        project_addr_info p
+        ON pr.id =p.project_id and p.id in (select min(t3.id) from project_addr_info t3  group by t3.project_id) and p.state = 1
+        WHERE 1=1
+        <if test="county != null and county !=''">
+            AND pr.id in(SELECT project_id FROM project_addr_info WHERE county = #{county})
+        </if>
+        <if test="township != null and township != ''">
+          AND p.township = #{township}
+        </if>
+        <if test="village != null and village != ''">
+          AND  p.village = #{village}
+        </if>
+        <if test="userId != null and userId !=''">
+            AND pr.id in (select project_id from use_pro_info where user_id = cast(#{userId} as integer))
+        </if>
+        and  pr.state = 1
+    </select>
+</mapper>

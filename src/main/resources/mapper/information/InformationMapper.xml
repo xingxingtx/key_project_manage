@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.aorise.mapper.information.InformationMapper">
+    <resultMap id="DetailMap" type="com.aorise.model.information.InformationModel">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="title" jdbcType="VARCHAR" property="name" />
+        <result column="type" jdbcType="INTEGER" property="type" />
+        <result column="content" jdbcType="VARCHAR" property="content" />
+        <result column="create_time" jdbcType="VARCHAR" property="createTime" />
+    </resultMap>
+    <!--添加资讯-->
+    <insert id="insertObject" parameterType="com.aorise.model.information.InformationModel" statementType="PREPARED"  useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO information
+        (title,type,content,state,creater,create_time)
+        VALUES
+        (#{name},#{type},#{content},#{state},#{creater},to_timestamp(#{createTime},'yyyy-mm-dd hh24:mi:ss'))
+    </insert>
+    <!--修改资讯-->
+    <update id="updateObject" parameterType="com.aorise.model.information.InformationModel" statementType="PREPARED" >
+        UPDATE information SET title=#{name},type=#{type},content=#{content},editer=#{editer},edit_time=to_timestamp(#{editTime},'yyyy-mm-dd hh24:mi:ss')
+        WHERE id=#{id}
+    </update>
+    <!--查询详情-->
+    <select id="getDetail" resultMap="DetailMap" parameterType="Integer" statementType="PREPARED">
+        SELECT title,type,content,create_time FROM information
+        WHERE id=#{id}
+    </select>
+    <!--分页查询-->
+    <select id="getAllByPage" resultMap="DetailMap" parameterType="java.util.Map" statementType="PREPARED">
+        SELECT id,title,type,create_time from information   WHERE 1=1
+        <if test="state!=null and state!='' and state!=0">
+            AND state= #{state}
+        </if>
+        order by create_time DESC
+        limit   #{endIndex} offset #{beginIndex}
+    </select>
+    <select id="getAllByPageCount" resultType="Integer" parameterType="java.util.Map" statementType="PREPARED">
+        SELECT count(1) from information
+        WHERE 1=1
+        <if test="state!=null and state!='' and state!=0">
+            AND state= #{state}
+        </if>
+    </select>
+    <!--修改资讯状态-->
+    <update id="updateStatus" parameterType="com.aorise.model.information.InformationModel" statementType="PREPARED" >
+        update information SET state=#{state} WHERE id=#{id}
+    </update>
+    <!--删除资讯-->
+    <delete id="deleteObject" parameterType="Integer" statementType="PREPARED" >
+      DELETE FROM information WHERE id=#{id}
+    </delete>
+</mapper>

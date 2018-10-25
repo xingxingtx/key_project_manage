@@ -1,0 +1,43 @@
+server:
+  port: 8089
+  tomcat:
+    max-http-post-size: 4194304
+  max-http-header-size: 4194304
+spring:
+  datasource:
+    password: Aorise@manage
+    username: dev_key_project_manage
+    url: jdbc:postgresql://192.168.1.41:5432/dev_key_project_manage?useSSL=false
+    driver-class-name: org.postgresql.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+          #初始化连接大小
+    initial-size: 8
+          #最小空闲连接数
+    min-idle: 5
+          #最大连接数
+    max-active: 10
+          #查询超时时间
+    query-timeout: 6000
+          #事务查询超时时间
+    transaction-query-timeout: 6000
+          #关闭空闲连接超时时间
+    remove-abandoned-timeout: 1800
+    filters: stat,config
+mybatis:
+  mapper-locations: classpath*:/mapper/*/*.xml
+#打印sql
+logging:
+  level:
+    com.aorise.mapper: DEBUG
+
+upload:
+  savepath: files/
+  fileURL: http://tex-api-key-project-manage.apps.aorisetest.com/ #服务地址
+  imgURL: /opt/apache-tomcat-8.5.20/webapps/files/
+
+
+getui: ##个推
+  appId: MVrD1tgKBOALGK8YMBhipA
+  appKey: XgdgcbMLMbAYDR388QauS2
+  masterSecret: APBmd67V0584UgRCHN0k9
+  url: http://sdk.open.api.igexin.com/apiex.htm #api地址

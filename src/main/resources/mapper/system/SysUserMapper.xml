@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.aorise.mapper.system.SysUserMapper">
+    <resultMap id="BaseResultMap" type="com.aorise.model.system.SysUserModel">
+        <id column="userid" property="id" jdbcType="INTEGER" javaType="Integer"></id>
+        <result column="user_name" property="userName" jdbcType="VARCHAR" javaType="String"></result>
+        <result column="pass_word" property="passWord" jdbcType="VARCHAR" javaType="String"></result>
+        <result column="dept_id" property="deptId" jdbcType="VARCHAR" javaType="String"></result>
+        <result column="full_name" property="fullName" jdbcType="VARCHAR" javaType="String"></result>
+        <result column="adder" property="adder" jdbcType="VARCHAR" javaType="String"></result>
+        <result column="phone" property="phone" jdbcType="VARCHAR" javaType="String"></result>
+        <result column="groups" property="groups" jdbcType="VARCHAR" javaType="String"></result>
+        <result column="state" property="state" jdbcType="INTEGER" javaType="Integer"></result>
+        <result column="adder_name" property="adderName" jdbcType="VARCHAR" javaType="String"></result>
+
+        <collection property="sysRoles" ofType="com.aorise.model.system.SysRoleModel">
+            <id column="roleid" property="id" jdbcType="INTEGER" javaType="Integer"></id>
+            <result column="rolename" property="name" jdbcType="VARCHAR" javaType="String"></result>
+            <result column="roleDescribe" property="describes" jdbcType="VARCHAR" javaType="String"></result>
+        </collection>
+
+        <collection property="sysPermissions" ofType="com.aorise.model.system.SysPermissionModel">
+            <id column="permissid" property="id" jdbcType="INTEGER" javaType="Integer"></id>
+            <result column="permissname" property="name" jdbcType="VARCHAR" javaType="String"></result>
+            <result column="parent" property="parent" jdbcType="INTEGER" javaType="Integer"></result>
+            <result column="code" property="code" jdbcType="VARCHAR" javaType="String"></result>
+            <result column="url" property="url" jdbcType="VARCHAR" javaType="String"></result>
+            <result column="permissDescribe" property="describes" jdbcType="VARCHAR" javaType="String"></result>
+        </collection>
+    </resultMap>
+
+    <select id="findByUsername" parameterType="String" resultMap="BaseResultMap">
+       SELECT u.id as userid,u.full_name,u.user_name,u.pass_word,u.adder,u.phone,u.groups,u.dept_id,u.state,
+         r.id as roleid,r.name as rolename,r.describes as roleDescribe,
+         p.id as permissid,p.name as permissname,p.parent,p.code,p.url,p.describes as permissDescribe,ai.name as adder_name
+         FROM public.sys_user u
+             left JOIN public.sys_user_role ur
+             ON ur.user_id = u.id
+             left JOIN public.sys_role r
+             ON r.id = ur.role_id
+             left JOIN public.sys_role_permission pr
+             ON pr.role_id = r.id
+             left JOIN public.sys_permission p
+             on pr.permission_id = p.id
+             left join area_info ai on u.adder=ai.area_code
+        WHERE u.user_name = #{username}
+    </select>
+
+    <select id="findByRoleId"  resultMap="BaseResultMap">
+        SELECT u.id as userid,u.user_name,u.pass_word,u.adder,u.phone,u.groups,u.dept_id,u.state,u.full_name
+        FROM public.sys_user u
+        INNER JOIN public.sys_user_role ur
+        ON ur.user_id = u.id
+        INNER JOIN public.sys_role r
+        ON r.id = ur.role_id
+        INNER JOIN area_info ai
+        ON ai.area_code=u.adder
+        WHERE 1=1
+        <if test="adder==null or adder==''">
+            and r.id = #{roleId}
+        </if>
+        <if test="adder !=null and adder !=''">
+            and (u.adder=#{adder} OR ai.parent_code=#{adder})
+        </if>
+        and u.state=1
+    </select>
+    <!--根据id查询对象-->
+    <select id="findObject" parameterType="Integer" resultMap="BaseResultMap">
+        SELECT u.id as userid,u.user_name,u.pass_word,u.adder,u.phone,u.groups,u.dept_id,u.full_name,u.state,ai.name as adder_name,
+         r.id as roleid,r.name as rolename,r.describes as roleDescribe
+        FROM public.sys_user u
+        left join area_info ai on u.adder=ai.area_code
+         INNER JOIN public.sys_user_role ur
+        ON ur.user_id = u.id
+        INNER JOIN public.sys_role r
+        ON r.id = ur.role_id
+        WHERE u.id = #{id}
+    </select>
+    <!--插入用户-->
+    <insert id="insertObject" useGeneratedKeys="true" parameterType="com.aorise.model.system.SysUserModel" keyProperty="id">
+         insert into "public"."sys_user"
+         ("full_name","user_name", "pass_word","phone","adder","dept_id","groups","state","creater","create_time")
+        values(#{fullName},#{userName},#{passWord},#{phone},#{adder},#{deptId},#{groups},#{state},#{creater},to_timestamp(#{createTime},'yyyy-mm-dd hh24:mi:ss'))
+    </insert>
+    <!--修改用户-->
+    <update id="editeObject" parameterType="com.aorise.model.system.SysUserModel">
+        UPDATE "public"."sys_user" set "full_name"=#{fullName},"user_name" =#{userName},
+        "pass_word"=#{passWord},"phone"=#{phone},"adder"=#{adder},"dept_id"=#{deptId},"groups"=#{groups},"state"=#{state},
+        "editer"=#{editer},"edit_time"=to_timestamp(#{editeTime},'yyyy-mm-dd hh24:mi:ss') WHERE id=#{id}
+    </update>
+
+    <!--删除用户-->
+    <delete id="deleteObject" parameterType="Integer">
+        DELETE FROM "public"."sys_user" WHERE id=#{id}
+    </delete>
+
+    <select id="findUserListNumber" parameterType="com.aorise.model.system.SysUserModel" resultType="Long">
+        select count(*) from "public"."sys_user" where 1=1
+        <if test="adder!=null and adder!=''">
+            and adder=#{adder}
+        </if>
+        <if test="deptId!=null and deptId!=''">
+            and dept_id=#{deptId}
+        </if>
+        <if test="groups!=null and groups!=''">
+            and groups=#{groups}
+        </if>
+        <if test="state!=null">
+            and state=#{state}
+        </if>
+        <if test="userName!=null and userName!=''">
+            and user_name  like CONCAT('%',#{userName},'%') or full_name like CONCAT('%',#{userName},'%')
+        </if>
+            and groups !='4' and groups !='5'
+    </select>
+<select id="findAllUser" resultMap="BaseResultMap">
+   select id as userid,user_name,pass_word,adder,phone,groups,dept_id,full_name,state
+        from "public"."sys_user" WHERE state=#{state}
+</select>
+    <select id="findUserList" resultMap="BaseResultMap">
+        select u.id as userid,u.user_name,u.pass_word,ai.name as adder,u.phone,u.groups,u.dept_id,u.full_name,u.state
+        from "public"."sys_user" u
+        left join area_info ai on u.adder=ai.area_code
+        <where>
+            <if test="model.adder!=null and model.adder!=''">
+                and u.adder=#{model.adder}
+            </if>
+            <if test="model.deptId!=null and model.deptId!=''">
+                and u.dept_id=#{model.deptId}
+            </if>
+            <if test="model.groups!=null and model.groups!=''">
+                and u.groups=#{model.groups}
+            </if>
+            <if test="model.state!=null">
+                and u.state=#{model.state}
+            </if>
+            <if test="model.userName!=null and model.userName!=''">
+                and user_name  like CONCAT('%',#{model.userName},'%') or full_name like CONCAT('%',#{model.userName},'%')
+            </if>
+                and u.groups !='4' and u.groups !='5'
+        </where>
+        order by u.create_time desc
+        limit #{everyPage} offset #{beginIndex}
+    </select>
+
+    <select id="findUserListByFullName" resultMap="BaseResultMap">
+        select id as userid,user_name,phone,groups,full_name
+        from "public"."sys_user" WHERE   state=1
+        <if test="fullName!=null and fullName!=''">
+            and full_name like CONCAT('%',#{fullName},'%')
+        </if>
+    </select>
+
+    <select id="findUserListByAddrXz"  parameterType="String"  resultMap="BaseResultMap">
+        select id as userid,user_name,phone,groups,full_name
+        from "public"."sys_user"  WHERE   state=1
+        <if test="adder!=null and adder!=''">
+            and (adder=#{adder} OR adder=#{adder})
+        </if>
+        and groups='1' or groups='2'
+    </select>
+
+    <select id="findUserListByAddrPl"  resultMap="BaseResultMap">
+        select id as userid,user_name,phone,groups,full_name
+        from "public"."sys_user"  WHERE   state=1
+        <if test="adder!=null and adder!=''">
+            and (adder=#{adder} OR adder=#{adder} OR adder='431200000000')
+        </if>
+        and groups='1' or groups='2'
+    </select>
+</mapper>

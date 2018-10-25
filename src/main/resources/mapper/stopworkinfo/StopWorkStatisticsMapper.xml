@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.aorise.mapper.stopworkinfo.StopWorkStatisticsMapper">
+    <resultMap id="DetailMap" type="com.aorise.model.stopworkinfo.StopWorkStatisticsModel">
+        <result column="key" jdbcType="VARCHAR" property="key"/>
+        <result column="value" jdbcType="VARCHAR" property="value"/>
+    </resultMap>
+
+    <!--根据时间段查询阻工次数-->
+    <select id="getActionByTime" parameterType="java.util.Map" resultType="Integer" statementType="PREPARED">
+        SELECT "sum"(X) from (SELECT "count"(1) X from stop_work_info where to_char(create_time,'yyyy-MM')=#{dateTime}) AS X
+    </select>
+    <!--根据地区查询阻工累计次数-->
+    <select id="getActionByArea" parameterType="java.util.Map"  resultType="Integer" statementType="PREPARED">
+        SELECT "sum"(X) from (SELECT "count"(1) X from stop_work_info where 1=1
+        <if test="startDate!=null and startDate!='' and endDate!=null and endDate">
+            AND   to_timestamp(to_char(create_time,'yyyy-MM'),'yyyy-MM')  between to_timestamp(#{startDate},'yyyy-MM')  and   to_timestamp(#{endDate},'yyyy-MM')
+        </if>
+        <if test="county!=null and county!=''">
+            AND county=#{county}
+        </if>
+        ) AS X
+    </select>
+    <!--根据阻工原因统计次数-->
+    <select id="getActionByType" parameterType="java.util.Map" resultMap="DetailMap" statementType="PREPARED">
+        SELECT(SELECT "count"(1) from stop_work_info where 1=1 and prevent_reason like '%相关款项问题%'
+        <if test="startDate!=null and startDate!='' and endDate!=null and endDate!='' ">
+            AND  to_timestamp(to_char(create_time,'yyyy-MM'),'yyyy-MM')  between to_timestamp(#{startDate},'yyyy-MM') and   to_timestamp(#{endDate},'yyyy-MM')
+        </if>
+        )  AS visits,
+        (SELECT "count"(1)  from stop_work_info where 1=1 and prevent_reason like '%程序不合法%'
+        <if test="startDate!=null and startDate!='' and endDate!=null and endDate!='' ">
+            AND  to_timestamp(to_char(create_time,'yyyy-MM'),'yyyy-MM')  between to_timestamp(#{startDate},'yyyy-MM') and   to_timestamp(#{endDate},'yyyy-MM')
+        </if> )as work,
+        (SELECT "count"(1)  from stop_work_info where 1=1 and prevent_reason like '%群众无故闹事%'
+        <if test="startDate!=null and startDate!='' and endDate!=null and endDate!='' ">
+            AND  to_timestamp(to_char(create_time,'yyyy-MM'),'yyyy-MM')  between to_timestamp(#{startDate},'yyyy-MM') and   to_timestamp(#{endDate},'yyyy-MM')
+        </if>
+        )as hidden,
+        (SELECT "count"(1)  from stop_work_info where 1=1 and prevent_reason like '%对协商结果不满意%'
+        <if test="startDate!=null and startDate!='' and endDate!=null and endDate!='' ">
+            AND  to_timestamp(to_char(create_time,'yyyy-MM'),'yyyy-MM')  between to_timestamp(#{startDate},'yyyy-MM') and   to_timestamp(#{endDate},'yyyy-MM')
+        </if>
+        )as petition,
+        (SELECT "count"(1)  from stop_work_info where 1=1 and prevent_reason not like '%相关款项问题%' and prevent_reason not like '%程序不合法%'
+        and prevent_reason not like '%群众无故闹事%' and prevent_reason not like '%对协商结果不满意%'
+        <if test="startDate!=null and startDate!='' and endDate!=null and endDate!='' ">
+            AND  to_timestamp(to_char(create_time,'yyyy-MM'),'yyyy-MM')  between to_timestamp(#{startDate},'yyyy-MM') and   to_timestamp(#{endDate},'yyyy-MM')
+        </if>
+        )as other
+    </select>
+</mapper>

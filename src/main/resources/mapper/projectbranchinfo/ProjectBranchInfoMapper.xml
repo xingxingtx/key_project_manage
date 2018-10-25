@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.aorise.mapper.projectbranchinfo.ProjectBranchInfoMapper">
+
+
+
+    <!--根据区县code查询项目总数、总投资金额、开工数、未开工数、开工率-->
+    <select id="getprojectbranchinfo" resultType="com.aorise.model.projectbranchinfo.ProjectBranchInfoModel">
+        select
+        (select sum(sum_money) from project_dase_case pdc  JOIN project_addr_info pai ON pai.project_id = pdc.ID
+        and pai.state=1
+        <if test="icounty != null and icounty != '' and icounty !='431200000000'">
+            and pai.county = #{icounty}
+        </if>
+        )as sumMoney,
+        (select COUNT ( 1 ) from project_dase_case pdc  JOIN project_addr_info pai ON pai.project_id = pdc.ID
+        and pai.state=1
+        <if test="icounty != null and icounty != '' and icounty !='431200000000'">
+            and pai.county = #{icounty}
+        </if>
+        )as projectSum,
+        (select SUM ( CASE WHEN pdc.project_state = 4 THEN 1 ELSE 0 END ) from project_dase_case pdc  JOIN project_addr_info pai ON pai.project_id = pdc.ID
+
+        and pai.state=1
+        <if test="icounty != null and icounty != ''  and icounty !='431200000000'">
+            and pai.county = #{icounty}
+        </if>
+        ) AS openSum,
+        (select SUM ( CASE WHEN pdc.project_state = 3 THEN 1 ELSE 0 END ) from project_dase_case pdc  JOIN project_addr_info pai ON pai.project_id = pdc.ID
+        and pai.state=1
+        <if test="icounty != null and icounty != ''  and icounty !='431200000000'">
+         and pai.county = #{icounty}
+        </if>
+        ) as notOpenSum
+    </select>
+    <!--根据区县code查询当地的项目总数和经纬度-->
+    <select id="getprojectCount" resultType="com.aorise.model.projectbranchinfo.ProjectCountModel">
+        SELECT pai.latitude,pai.longitude,pdc.name as name,pdc.id as projectid
+        from
+        project_addr_info pai
+        LEFT JOIN project_dase_case pdc
+        ON pdc.id = pai.project_id and pdc.state=1
+        WHERE
+         pai.state = #{state}
+        <if test="icounty != null and icounty != '' and icounty !='431200000000'">
+            and pai.county = #{icounty}
+        </if>
+    </select>
+
+</mapper>

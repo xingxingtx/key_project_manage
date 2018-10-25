@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.aorise.mapper.imgfile.ImgFileMapper">
+    <resultMap id="DetailMap" type="com.aorise.model.imgfile.ImgFileModel">
+        <id column="id" jdbcType="INTEGER" property="id" />
+        <result column="relation_id" jdbcType="INTEGER" property="relationId" />
+        <result column="type" jdbcType="INTEGER" property="type" />
+        <result column="url" jdbcType="VARCHAR" property="url" />
+        <result column="creater" jdbcType="INTEGER" property="creater" />
+        <result column="editer" jdbcType="INTEGER" property="editer" />
+        <result column="create_time" jdbcType="VARCHAR" property="createTime" />
+        <result column="edit_time" jdbcType="VARCHAR" property="editTime" />
+        <result column="state" jdbcType="INTEGER" property="state" />
+    </resultMap>
+
+    <!--添加图片-->
+    <insert id="addImgFile" parameterType="com.aorise.model.imgfile.ImgFileModel" statementType="PREPARED" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO imageinfo
+        (relation_id,type,url,creater,create_time,state)
+        VALUES
+        (#{relationId},#{type},#{url},#{creater},now(),#{state})
+    </insert>
+
+    <!--查询图片-->
+    <select id="getImgFile" resultMap="DetailMap" parameterType="java.util.Map" statementType="PREPARED">
+        SELECT id,relation_id,type,url
+        FROM imageinfo
+        WHERE state=1
+        <if test="relationId!=null and relationId!=''">
+            AND relation_id = cast(#{relationId} as integer)
+        </if>
+        ORDER BY CREATE_TIME ASC
+    </select>
+
+    <!--根据id查询图片-->
+    <select id="getImgFileById" resultMap="DetailMap" parameterType="java.util.Map" statementType="PREPARED">
+        SELECT id,relation_id,type,url
+        FROM imageinfo
+        WHERE id = #{id}
+    </select>
+
+    <!--删除图片-->
+    <delete id="deleteImgFile" parameterType="java.util.Map">
+        DELETE FROM
+        imageinfo
+        WHERE id = #{id}
+    </delete>
+
+</mapper>

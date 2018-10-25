@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.aorise.mapper.projectcominfo.ProjectComInfoMapper">
+    <resultMap id="baseMap" type="com.aorise.model.projectcominfo.ProjectComInfoModel">
+        <id column="id" property="id"/>
+        <result property="projectid" column="project_id"/>
+        <result property="describes" column="describes"/>
+        <result property="reuser" column="reuser"/>
+        <result property="type" column="type"/>
+        <result property="state" column="state"/>
+        <result property="creater" column="creater"/>
+        <result property="createTime" column="create_time"/>
+        <result property="editer" column="editer"/>
+        <result property="editTime" column="edit_time"/>
+    </resultMap>
+
+    <resultMap id="DetailMap" type="com.aorise.model.projectdasecase.ProjectAddrInfoModel">
+        <id column="id"  property="id" />
+        <result column="project_id"  property="projectid" />
+        <result column="county"  property="county" />
+    </resultMap>
+
+
+    <resultMap id="proMap" type="com.aorise.model.projectdasecase.ProjectDaseCaseModel">
+        <id column="id"  property="id" />
+        <result column="name"  property="name" />
+    </resultMap>
+    <sql id="baseSql">
+        p.id,
+        p.project_id,
+        p.describes,
+        p.reuser,
+        p.type,
+        p.state,
+        p.creater,
+        p.create_time,
+        p.editer,
+        p.edit_time
+    </sql>
+    <insert id="addProjectcomInfo" parameterType="com.aorise.model.projectcominfo.ProjectComInfoModel" statementType="PREPARED"  useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO project_com_info
+        (project_id,describes,reuser,type,create_time,state,relate_id)
+        VALUES
+        (#{projectid},#{describes},#{reuser},#{type},to_timestamp(#{createTime},'yyyy-mm-dd hh24:mi:ss'),#{state},cast(#{relateId} as integer))
+    </insert>
+    <!--查询项目点评列表-->
+    <select id="selectProjectcomInfo" resultMap="baseMap" parameterType="Integer" statementType="PREPARED">
+        SELECT
+        p.id,
+        p.describes,
+       (SELECT full_name FROM sys_user WHERE id = cast(p.reuser AS INTEGER )) AS reuser,
+        p.type,
+        p.state,
+        p.creater,
+        p.create_time,
+        p.editer,
+        p.edit_time
+        FROM project_com_info p
+        WHERE 1=1
+        <if test="projectId != null and projectId !=''">
+            AND p.project_id = cast(#{projectId} as integer)
+        </if>
+        <if test="type != null and type !=''">
+            AND p.type = cast(#{type} as integer)
+        </if>
+        <if test="relateId != null and relateId != ''">
+            AND p.relate_id = cast(#{relateId} as integer)
+        </if>
+    </select>
+
+    <!--根据项目id查询该项目是否存在-->
+    <select id="getProject" resultMap="DetailMap" parameterType="Integer" >
+        SELECT id,project_id,county from project_addr_info where project_id = #{projectId}
+    </select>
+
+    <!--根据项目id查询该项目是否存在-->
+    <select id="getProjectName" resultMap="proMap" parameterType="Integer" >
+        SELECT id,name from project_dase_case where id = #{projectId}
+    </select>
+</mapper>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.aorise.mapper.system.SysRoleMapper">
+
+    <resultMap id="DetailMap" type="com.aorise.model.system.SysRoleModel">
+        <id column="id" property="id" jdbcType="INTEGER" javaType="Integer"></id>
+        <result column="name" property="name" jdbcType="VARCHAR" javaType="String"></result>
+        <result column="describes" property="describes" jdbcType="VARCHAR" javaType="String"></result>
+        <result column="state" property="state" jdbcType="INTEGER" javaType="Integer"></result>
+    </resultMap>
+
+    <resultMap id="CountMap" type="com.aorise.model.system.SysRoleModel">
+        <result column="name" property="name" jdbcType="VARCHAR" javaType="String"></result>
+        <result column="count" property="count" jdbcType="BIGINT" javaType="Long"></result>
+
+    </resultMap>
+
+    <insert id="insertObject" useGeneratedKeys="true" keyProperty="id"
+            parameterType="com.aorise.model.system.SysRoleModel">
+        insert into "public"."sys_role"("name","describes","creater","create_time","state")
+        values(#{name},#{describes},#{creater},to_timestamp(#{createTime},'yyyy-mm-dd hh24:mi:ss'),#{state})
+    </insert>
+
+    <!--删除角色-->
+    <delete id="deleteObject" parameterType="com.aorise.model.system.SysRoleModel">
+        DELETE FROM "public"."sys_role" WHERE id=#{id}
+    </delete>
+
+    <!--修改角色-->
+    <update id="editeObject" parameterType="com.aorise.model.system.SysRoleModel">
+        UPDATE "public"."sys_role" set "name"=#{name},"describes" =#{describes},
+        "editer"=#{editer},"edit_time"=to_timestamp(#{editeTime},'yyyy-mm-dd hh24:mi:ss'),"state"=#{state} WHERE id=#{id}
+    </update>
+
+    <!--查询详情-->
+    <select id="findObject" resultMap="DetailMap" parameterType="com.aorise.model.system.SysRoleModel">
+        SELECT "id","name","describes","state" FROM "public"."sys_role"
+        WHERE id=#{id} and  "state"=1
+    </select>
+    <!--查询列表-->
+    <select id="findRoleList" resultMap="DetailMap" parameterType="com.aorise.model.system.SysRoleModel">
+        SELECT "id","name","describes","state" FROM "public"."sys_role"
+        WHERE  "state"=1
+    </select>
+
+    <!--统计角色人数-->
+    <select id="findRoleCount" resultMap="CountMap">
+       select ai.name||r."name" as name,count(1)as count from sys_user u inner join sys_role r on cast(u.groups as int)=r.id
+       inner join area_info ai on ai.area_code=u.adder
+       where u.state=1
+       group by ai.area_code,ai.name,r.name order by ai.area_code
+    </select>
+</mapper>
